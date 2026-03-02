@@ -35,3 +35,6 @@
 - Reworked local nutrition provider to compute by serving unit and consumed mass using per-100g data.
 - Expanded local food catalog and aliases with more realistic nutrition baselines.
 - Added unit tests for local nutrition conversion accuracy.
+- Added Android/iOS packaging scripts and native Capacitor platform dependencies.
+- Implemented GitHub-manifest OTA flow with manifest fetch/validation, asset cache warmup, and reload to latest app URL.
+- Documented OTA manifest schema and mobile packaging commands in README.

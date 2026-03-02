@@ -48,6 +48,8 @@ export interface LiveUpdateState {
   manifestHash: string;
   manifestSignature: string;
   appliedAt: string;
+  activeAppUrl?: string;
+  cachedAt?: string;
   rollbackReason?: string;
 }
 

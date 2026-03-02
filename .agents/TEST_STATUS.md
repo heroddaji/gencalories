@@ -8,6 +8,7 @@
   - 5 test files passed
   - 13 tests passed
 - Build: **NOT RUN** in this run
+- OTA/provider tests: **NOT ADDED YET**
 
 ## Present test files
 
@@ -21,3 +22,5 @@
 
 - Nutrition resolution now uses serving-unit conversion and per-100g baselines.
 - Local catalog expanded to additional foods with per-food serving-size mappings.
+- Live update provider now targets GitHub manifest URL and can prefetch/cache listed assets before reload.
+- Baseline manifest file now exists at `live-update/manifest.json` for immediate OTA endpoint availability.
