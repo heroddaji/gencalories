@@ -32,3 +32,6 @@
 - Added unit test coverage for serving unit synonym normalization.
 - Fixed `normalizeFoodName` trailing-whitespace edge case after punctuation cleanup.
 - Verified `npm run typecheck` and `npm test` pass.
+- Reworked local nutrition provider to compute by serving unit and consumed mass using per-100g data.
+- Expanded local food catalog and aliases with more realistic nutrition baselines.
+- Added unit tests for local nutrition conversion accuracy.

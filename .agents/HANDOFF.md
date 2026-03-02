@@ -2,19 +2,16 @@
 
 ## What was completed
 
-- Implemented support for different serving types in food entry UI.
-- Replaced free-text serving unit primary input with a serving type selector:
-  - predefined units: serving, g, kg, ml, l, cup, tbsp, tsp, oz, piece, slice, bowl, plate
-  - custom option with explicit custom input field
-- Added serving unit domain module:
-  - canonical defaults/constants
-  - predefined unit list for UI
-  - synonym normalization (for example `grams` -> `g`, `tablespoons` -> `tbsp`)
-- Applied normalization at domain entry creation to keep persisted data consistent.
-- Updated unit tests for food entry factory normalization.
+- Reworked nutrition resolution so calories/macros now change by serving type and quantity.
+- Replaced fixed per-serving nutrition catalog values with `per100g` baselines plus per-food unit weight mappings.
+- Added conversion support for common units:
+  - `g`, `kg`, `ml`, `l`, `oz`, `tsp`, `tbsp`, `cup`
+  - per-food overrides for `serving`, `piece`, `slice`, `bowl`, `plate`
+- Expanded local food catalog with more items/aliases (produce, proteins, grains, legumes, dairy, fats).
+- Added unit test coverage for nutrition conversion behavior.
 - Validation completed successfully:
   - `npm run typecheck` passed
-  - `npm test` passed (4 files, 10 tests)
+  - `npm test` passed (5 files, 13 tests)
 
 ## Current blocker
 
@@ -22,6 +19,6 @@
 
 ## Immediate next steps
 
-1. Add integration test for selecting history suggestions that include non-predefined units.
-2. Consider using serving unit in nutrition scaling logic (unit-aware conversions) in nutrition provider.
-3. Add contract tests around serving normalization expectations at repository boundaries.
+1. Add integration tests for UI serving selection -> saved nutrition snapshot correctness.
+2. Add contract tests for conversion behavior on unknown/custom units.
+3. Tune density assumptions for volume units (`ml`, `cup`) on selected foods where precision matters.

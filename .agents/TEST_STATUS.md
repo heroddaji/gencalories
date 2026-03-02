@@ -5,8 +5,8 @@
 - Date: **2026-03-03**
 - Typecheck: **PASS** (`npm run typecheck`)
 - Unit tests: **PASS** (`npm test`)
-  - 4 test files passed
-  - 10 tests passed
+  - 5 test files passed
+  - 13 tests passed
 - Build: **NOT RUN** in this run
 
 ## Present test files
@@ -15,8 +15,9 @@
 - `tests/unit/suggestionRanking.spec.ts`
 - `tests/unit/foodEntryFactory.spec.ts`
 - `tests/unit/dailySummary.spec.ts`
+- `tests/unit/localNutritionProvider.spec.ts`
 
 ## Notes
 
-- Serving type feature added with unit normalization and UI selection flow.
-- `normalizeFoodName` now trims after punctuation cleanup to avoid trailing-space normalization regressions.
+- Nutrition resolution now uses serving-unit conversion and per-100g baselines.
+- Local catalog expanded to additional foods with per-food serving-size mappings.

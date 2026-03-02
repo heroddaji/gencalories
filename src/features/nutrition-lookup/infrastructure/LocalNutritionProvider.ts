@@ -1,6 +1,7 @@
 import type { FoodSearchProvider, NutritionProvider } from "@/app/di/contracts";
-import { defaultNutritionCatalog } from "@/features/nutrition-lookup/domain/defaultNutritionCatalog";
+import { defaultNutritionCatalog, type CatalogFood } from "@/features/nutrition-lookup/domain/defaultNutritionCatalog";
 import type { NutritionSnapshot } from "@/shared/types/core";
+import { normalizeServingUnit } from "@/shared/utils/serving";
 import { normalizeFoodName, stringSimilarity } from "@/shared/utils/text";
 
 const round = (value: number): number => Math.round(value * 10) / 10;
@@ -12,6 +13,37 @@ const scaleNutrition = (base: NutritionSnapshot, quantity: number): NutritionSna
     carbs: round(base.carbs * quantity),
     fat: round(base.fat * quantity),
   };
+};
+
+const UNIT_TO_GRAMS: Record<string, number> = {
+  g: 1,
+  kg: 1000,
+  ml: 1,
+  l: 1000,
+  oz: 28.35,
+  tsp: 4.2,
+  tbsp: 14.3,
+  cup: 240,
+};
+
+const nutritionForMass = (per100g: NutritionSnapshot, grams: number): NutritionSnapshot => {
+  const factor = grams / 100;
+  return scaleNutrition(per100g, factor);
+};
+
+const resolveGrams = (unit: string, quantity: number, food: CatalogFood): number => {
+  const normalizedUnit = normalizeServingUnit(unit);
+  const itemSpecific = food.gramsPerUnit?.[normalizedUnit as keyof NonNullable<CatalogFood["gramsPerUnit"]>];
+  if (itemSpecific) {
+    return quantity * itemSpecific;
+  }
+
+  if (normalizedUnit in UNIT_TO_GRAMS) {
+    return quantity * UNIT_TO_GRAMS[normalizedUnit];
+  }
+
+  // For custom/unknown units, fall back to item's serving size when available.
+  return quantity * (food.gramsPerUnit?.serving ?? 100);
 };
 
 const fallbackNutrition = (foodName: string): NutritionSnapshot => {
@@ -31,15 +63,14 @@ export class LocalNutritionProvider implements NutritionProvider {
     quantity: number;
     unit: string;
   }): Promise<NutritionSnapshot> {
-    void input.unit;
     const quantity = Number.isFinite(input.quantity) && input.quantity > 0 ? input.quantity : 1;
     const normalizedName = normalizeFoodName(input.foodName);
 
-    let bestMatch: NutritionSnapshot | null = null;
+    let bestMatch: CatalogFood | null = null;
     let bestScore = -1;
 
-    defaultNutritionCatalog.forEach((item) => {
-      item.aliases.forEach((alias) => {
+    for (const item of defaultNutritionCatalog) {
+      for (const alias of item.aliases) {
         const normalizedAlias = normalizeFoodName(alias);
         const score = Math.max(
           normalizedAlias === normalizedName ? 1 : 0,
@@ -50,13 +81,18 @@ export class LocalNutritionProvider implements NutritionProvider {
 
         if (score > bestScore) {
           bestScore = score;
-          bestMatch = item.perServing;
+          bestMatch = item;
         }
-      });
-    });
+      }
+    }
 
-    const base = bestMatch ?? fallbackNutrition(input.foodName);
-    return scaleNutrition(base, quantity);
+    if (!bestMatch) {
+      const base = fallbackNutrition(input.foodName);
+      return scaleNutrition(base, quantity);
+    }
+
+    const grams = resolveGrams(input.unit, quantity, bestMatch);
+    return nutritionForMass(bestMatch.per100g, grams);
   }
 }
 
