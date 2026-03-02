@@ -1,18 +1,16 @@
 # STATE
 
 - Phase: **Phase 1 MVP (web-first + Capacitor-ready structure)**
-- Status: **Implemented core vertical slice**
+- Status: **Serving-type UX expanded and validated**
 - Completed goals:
-  - Hybrid-ready Vite + Ionic + Capacitor project scaffolded.
-  - Plugin contracts and DI container created.
-  - Food entry flow implemented (input → nutrition resolve → save entry + history upsert).
-  - Daily summary implemented (calories, macros, goal delta, plain-language insight).
-  - History suggestions implemented with ranking (prefix/fuzzy/recency/frequency), clear-all, delete-one.
-  - OTA/live-update state/check/apply/rollback provider scaffolded for web.
-  - Unit tests added for normalization, ranking, food entry factory, summary calculations.
+  - Added selectable serving types for food entry (common units + custom unit).
+  - Added serving unit normalization policy (canonical units + synonym mapping).
+  - Kept history suggestion interoperability with predefined and custom units.
+  - Added/updated unit coverage for food-entry serving normalization.
+  - Ran and passed validation (`npm run typecheck`, `npm test`).
 - Current blockers:
-  - Dependency installation cannot complete due npm registry network `ETIMEDOUT`, preventing full local verification.
+  - None.
 - Next actions:
-  1. Re-run dependency installation once network is stable.
-  2. Run `npm run typecheck`, `npm test`, and `npm run build`.
-  3. Add integration/contract tests and mobile platform adapters.
+  1. Add contract tests for provider interfaces (`NutritionProvider`, `FoodSuggestionService`, `FoodHistoryRepository`).
+  2. Add integration test for suggestion-selection -> serving unit prefill behavior.
+  3. Add basic e2e web smoke for add-food + summary update path.

@@ -22,6 +22,24 @@ describe("createFoodEntry", () => {
     expect(entry.servingUnit).toBe("serving");
   });
 
+  it("normalizes known serving unit synonyms", () => {
+    const entry = createFoodEntry({
+      userId: "user-1",
+      foodName: "banana",
+      quantity: 1,
+      servingUnit: " Grams ",
+      consumedAt: "2026-03-02T10:00:00.000Z",
+      nutritionSnapshot: {
+        calories: 105,
+        protein: 1.3,
+        carbs: 27,
+        fat: 0.4,
+      },
+    });
+
+    expect(entry.servingUnit).toBe("g");
+  });
+
   it("throws if quantity is invalid", () => {
     expect(() =>
       createFoodEntry({

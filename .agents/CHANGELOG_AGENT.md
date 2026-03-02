@@ -23,3 +23,12 @@
   - food entry factory
   - daily summary calculations
 - Added autonomous context files under `.agents/`.
+
+## 2026-03-03
+
+- Added serving type domain module with canonical units, synonym normalization, and predefined-unit helpers.
+- Updated food entry UI to support selectable serving types and custom units.
+- Normalized serving units in food entry factory to persist canonical values.
+- Added unit test coverage for serving unit synonym normalization.
+- Fixed `normalizeFoodName` trailing-whitespace edge case after punctuation cleanup.
+- Verified `npm run typecheck` and `npm test` pass.

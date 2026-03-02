@@ -1,4 +1,5 @@
 import type { FoodEntry, NutritionSnapshot } from "@/shared/types/core";
+import { normalizeServingUnit } from "@/features/food-entry/domain/servingUnits";
 import { normalizeFoodName } from "@/shared/utils/text";
 
 export interface CreateFoodEntryInput {
@@ -20,7 +21,7 @@ const createId = (): string => {
 
 export const createFoodEntry = (input: CreateFoodEntryInput): FoodEntry => {
   const foodName = input.foodName.trim();
-  const servingUnit = input.servingUnit.trim();
+  const servingUnit = normalizeServingUnit(input.servingUnit);
 
   if (!foodName) {
     throw new Error("Food name is required.");

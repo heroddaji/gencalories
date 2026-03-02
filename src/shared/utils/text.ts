@@ -3,7 +3,8 @@ export const normalizeFoodName = (value: string): string => {
     .toLowerCase()
     .trim()
     .replace(/[^\p{L}\p{N}\s]/gu, " ")
-    .replace(/\s+/g, " ");
+    .replace(/\s+/g, " ")
+    .trim();
 };
 
 export const stringSimilarity = (a: string, b: string): number => {

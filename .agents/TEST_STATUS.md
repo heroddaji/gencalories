@@ -2,10 +2,12 @@
 
 ## Last run summary
 
-- Dependency install: **BLOCKED** (network timeout to npm registry)
-- Typecheck: **NOT RUN** (waiting on install)
-- Unit tests: **NOT RUN** (waiting on install)
-- Build: **NOT RUN** (waiting on install)
+- Date: **2026-03-03**
+- Typecheck: **PASS** (`npm run typecheck`)
+- Unit tests: **PASS** (`npm test`)
+  - 4 test files passed
+  - 10 tests passed
+- Build: **NOT RUN** in this run
 
 ## Present test files
 
@@ -16,5 +18,5 @@
 
 ## Notes
 
-- `npm install` log indicates repeated `ETIMEDOUT` fetching packages (`@capacitor/core`, `@ionic/core`).
-- Re-run validation once dependencies are successfully installed.
+- Serving type feature added with unit normalization and UI selection flow.
+- `normalizeFoodName` now trims after punctuation cleanup to avoid trailing-space normalization regressions.

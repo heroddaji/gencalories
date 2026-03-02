@@ -11,6 +11,8 @@ import {
   IonLabel,
   IonList,
   IonPage,
+  IonSelect,
+  IonSelectOption,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -26,6 +28,13 @@ import type {
   DailyConsumptionSummary,
   FoodEntry,
 } from "@/shared/types/core";
+import {
+  CUSTOM_SERVING_UNIT,
+  DEFAULT_SERVING_UNIT,
+  isPredefinedServingUnit,
+  normalizeServingUnit,
+  predefinedServingUnits,
+} from "@/features/food-entry/domain/servingUnits";
 import { toDateKey } from "@/shared/utils/date";
 
 interface FoodEntryPageProps {
@@ -53,7 +62,8 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): JSX.Element =>
 
   const [foodName, setFoodName] = useState("");
   const [quantity, setQuantity] = useState("1");
-  const [servingUnit, setServingUnit] = useState("serving");
+  const [servingUnit, setServingUnit] = useState(DEFAULT_SERVING_UNIT);
+  const [customServingUnit, setCustomServingUnit] = useState("");
   const [dailyGoal, setDailyGoal] = useState("2000");
   const [suggestions, setSuggestions] = useState<SuggestionItemView[]>([]);
   const [entries, setEntries] = useState<FoodEntry[]>([]);
@@ -127,7 +137,14 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): JSX.Element =>
       setQuantity(String(suggestion.quantity));
     }
     if (suggestion.unit) {
-      setServingUnit(suggestion.unit);
+      const normalized = normalizeServingUnit(suggestion.unit);
+      if (isPredefinedServingUnit(normalized)) {
+        setServingUnit(normalized);
+        setCustomServingUnit("");
+      } else {
+        setServingUnit(CUSTOM_SERVING_UNIT);
+        setCustomServingUnit(normalized);
+      }
     }
     setSuggestions([]);
   };
@@ -137,8 +154,9 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): JSX.Element =>
       return;
     }
 
+    const resolvedServingUnit = servingUnit === CUSTOM_SERVING_UNIT ? normalizeServingUnit(customServingUnit) : servingUnit;
     const parsedQuantity = parsePositiveNumber(quantity);
-    if (!foodName.trim() || !parsedQuantity || !servingUnit.trim()) {
+    if (!foodName.trim() || !parsedQuantity || !resolvedServingUnit) {
       setMessage("Please provide food name, quantity, and serving unit.");
       return;
     }
@@ -149,11 +167,13 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): JSX.Element =>
         userId: container.userId,
         foodName,
         quantity: parsedQuantity,
-        servingUnit,
+        servingUnit: resolvedServingUnit,
       });
 
       setFoodName("");
       setQuantity("1");
+      setServingUnit(DEFAULT_SERVING_UNIT);
+      setCustomServingUnit("");
       setSuggestions([]);
       await refreshDashboard();
       setMessage(`Logged ${entry.foodName} (${entry.nutritionSnapshot.calories} kcal).`);
@@ -230,15 +250,33 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): JSX.Element =>
             </IonItem>
 
             <IonItem>
-              <IonLabel position="stacked">Serving Unit</IonLabel>
-              <IonInput
+              <IonLabel position="stacked">Serving Type</IonLabel>
+              <IonSelect
                 value={servingUnit}
-                placeholder="serving"
-                onIonInput={(event) => {
-                  setServingUnit(event.detail.value ?? "");
+                onIonChange={(event) => {
+                  setServingUnit(event.detail.value ?? DEFAULT_SERVING_UNIT);
                 }}
-              />
+              >
+                {predefinedServingUnits.map((unit) => (
+                  <IonSelectOption key={unit.value} value={unit.value}>
+                    {unit.label}
+                  </IonSelectOption>
+                ))}
+                <IonSelectOption value={CUSTOM_SERVING_UNIT}>Custom</IonSelectOption>
+              </IonSelect>
             </IonItem>
+            {servingUnit === CUSTOM_SERVING_UNIT ? (
+              <IonItem>
+                <IonLabel position="stacked">Custom Serving Unit</IonLabel>
+                <IonInput
+                  value={customServingUnit}
+                  placeholder="e.g. scoop"
+                  onIonInput={(event) => {
+                    setCustomServingUnit(event.detail.value ?? "");
+                  }}
+                />
+              </IonItem>
+            ) : null}
 
             <IonButton expand="block" onClick={() => void handleLogFood()} disabled={isSaving}>
               {isSaving ? "Saving..." : "Log Food"}
