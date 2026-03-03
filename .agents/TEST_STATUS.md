@@ -11,6 +11,10 @@
 - Mobile bundle sync: **PASS** (`npm run mobile:bundle` → `npm run cap:sync`)
 - OTA/provider tests: **NOT ADDED YET**
 
+## Latest change quick check
+
+- UI-only addition: Profile tab shows app version and bundle/build version; no new tests added. Recommend quick manual visual check in Profile tab.
+
 ## Present test files
 
 - `tests/unit/text.spec.ts`

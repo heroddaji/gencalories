@@ -28,6 +28,7 @@
 - Latest run notes:
 -  - Fixed TypeScript JSX namespace errors by returning ReactElement and ensuring react typings loaded; builds now pass.
 -  - `npm run build` and `npm run mobile:bundle` (Capacitor sync) succeed.
+-  - Added Profile tab footer row showing app version and bundle/build version from shared versionInfo.
 - Next actions:
 -  1. Monitor chunk size warning after adding heavier live-update metadata to ensure web build stays performant.
 -  2. Add integration/component tests for Home/AddFood meal-management UI flows (edit/remove/add in grouped views).

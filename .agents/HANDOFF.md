@@ -1,41 +1,9 @@
 # HANDOFF
 
-## What was completed
+## What was completed (latest)
 
-- Added **Summary tab** in `App.tsx` and new `SummaryPage.tsx` with:
-  - per-day summary rendering
-  - prev/next day buttons
-  - swipe-left/right day navigation
-- Upgraded daily summary visuals:
-  - existing calorie pie retained
-  - added three macro bars in pie area context (protein, carbs, fat)
-- Implemented user/date-aware data access:
-  - `FoodEntryRepository.listByDate(userId, date)`
-  - `DailySummaryService.forDate(userId, date)`
-  - updated callers in Home/Summary pages
-- Extended entry management capabilities:
-  - added repository methods `update` and `deleteById`
-  - added `UpdateFoodEntryUseCase` + `DeleteFoodEntryUseCase`
-- Reworked meal input UX in Home:
-  - breakfast/lunch/dinner/snack items shown as rows
-  - inline edit/remove with quantity + serving unit updates
-- Expanded `AddFoodToMealPage` to meet grouped-management requirement:
-  - now receives `dateKey`
-  - shows all items of selected meal group for that day
-  - allows add/edit/remove directly in that page
-  - new entries are recorded against selected date
-- Expanded Profile screen:
-  - age, height, current weight, target weight
-  - current BMI + target BMI
-  - healthy-range labels and BMI scale visualization
-  - added persistent profile storage (`LocalUserProfileRepository`) and save use case
-- Added/updated tests:
-  - updated `dailySummary.spec.ts` for new contracts
-  - added `bmi.spec.ts`
-  - added `date.spec.ts`
-  - added `localFoodEntryRepository.spec.ts`
-  - added `updateFoodEntryUseCase.spec.ts`
-  - added `localUserProfileRepository.spec.ts`
+- Added Profile tab footer row showing app version and bundle/build version via shared `versionInfo` in `ProfilePage.tsx` (last row).
+- (Previous context retained) Summary tab, date-aware flows, BMI/profile expansion, meal management, repositories/use cases, and test suite additions.
 
 ## Validation status
 

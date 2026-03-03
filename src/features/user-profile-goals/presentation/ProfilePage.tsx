@@ -18,6 +18,7 @@ import {
   isHealthyBmi,
 } from "@/features/user-profile-goals/domain/bmi";
 import type { UserProfile } from "@/shared/types/core";
+import { versionInfo } from "@/shared/versionInfo";
 
 interface ProfilePageProps {
   container: AppContainer;
@@ -225,6 +226,17 @@ export const ProfilePage = ({ container }: ProfilePageProps): ReactElement => {
             <p>{message}</p>
           </IonText>
         ) : null}
+
+        <IonItem lines="none" className="version-row">
+          <IonLabel>
+            <p>App Version</p>
+            <strong>{versionInfo.appVersion}</strong>
+          </IonLabel>
+          <IonLabel className="ion-text-right">
+            <p>Build</p>
+            <strong>{versionInfo.bundleVersion}</strong>
+          </IonLabel>
+        </IonItem>
       </IonCardContent>
     </IonCard>
   );
