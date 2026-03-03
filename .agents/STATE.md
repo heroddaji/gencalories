@@ -22,6 +22,7 @@
     - `npm run typecheck`
     - `npm test` (10 files, 27 tests)
     - `npm run build`
+  - Added Capacitor mobile storage provider, container, and runtime detection to back all repositories/services with SQLite on native platforms while keeping the web container unchanged.
 - Current blockers:
   - None.
 - Next actions:

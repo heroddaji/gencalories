@@ -17,6 +17,13 @@ GenCalories is a modular calories-tracking app scaffold built with **Ionic React
 - `src/features/*` split by feature and layer (domain/application/infrastructure/presentation)
 - Plugin-first contracts in `src/app/di/contracts.ts`
 - Web composition root in `src/app/bootstrap/createWebAppContainer.ts`
+- Mobile builds now wire a `MobileStorageProvider` (`src/platform/mobile/MobileStorageProvider.ts`) that persists key/value data via the Capacitor SQLite plugin and is only activated when `Capacitor.isNativePlatform()` returns `true`.
+- `src/app/bootstrap/createMobileAppContainer.ts` mirrors the web container but injects the native storage provider while still sharing the same use cases and services, and `src/app/App.tsx` selects the appropriate container at runtime.
+
+## Mobile storage parity
+
+- The native bootstrap ensures food entries, history, user goals, profile data, and live update state persist through SQLite using the shared `StorageProvider` interface.
+- Validation for native behavior relies on Capacitor device builds, so continue running `npm run typecheck` and mobile bundling scripts (`npm run mobile:bundle`) within the targeted platforms to ensure the SQLite adapter initializes properly.
 
 ## Run
 

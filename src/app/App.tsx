@@ -14,6 +14,8 @@ import {
 } from "@ionic/react";
 import { useMemo, useState } from "react";
 import { barChartOutline, homeOutline, personOutline } from "ionicons/icons";
+import { Capacitor } from "@capacitor/core";
+import { createMobileAppContainer } from "@/app/bootstrap/createMobileAppContainer";
 import { createWebAppContainer } from "@/app/bootstrap/createWebAppContainer";
 import { SummaryPage } from "@/features/daily-summary/presentation/SummaryPage";
 import { FoodEntryPage } from "@/features/food-entry/presentation/FoodEntryPage";
@@ -22,7 +24,11 @@ import { ProfilePage } from "@/features/user-profile-goals/presentation/ProfileP
 setupIonicReact();
 
 export const App = (): JSX.Element => {
-  const container = useMemo(() => createWebAppContainer(), []);
+  const container = useMemo(
+    () =>
+      Capacitor.isNativePlatform() ? createMobileAppContainer() : createWebAppContainer(),
+    [],
+  );
   const [activeTab, setActiveTab] = useState<"home" | "summary" | "profile">("home");
 
   return (
