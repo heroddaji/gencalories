@@ -7,10 +7,9 @@
 - **Consequences:** Fast local web iteration; mobile sync possible through Capacitor. Requires follow-up to add native adapters.
 
 ## ADR-002: Plugin-first local providers for MVP
-
 - **Context:** Nutrition and suggestions required in MVP without external API dependencies.
 - **Decision:** Implement `LocalNutritionProvider`, `LocalFoodSearchProvider`, local repositories, and DI composition in `createWebAppContainer`.
-- **Consequences:** Fully offline-capable baseline and deterministic behavior; nutrition values are heuristic/local-catalog quality only.
+- **Consequences:** Fully offline-capable baseline and deterministic behavior; nutrition values are heuristic/local-catalog quality only. Catalog later expanded with FoodData Central per-100g references to improve accuracy while remaining offline.
 
 ## ADR-003: OTA safety model scaffolded via stateful provider
 

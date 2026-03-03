@@ -1,34 +1,16 @@
 # STATE
 
 - Phase: **Phase 1 MVP (web-first + Capacitor-ready structure)**
-- Status: **Core UX expansion complete; latest change aligns summary loading state and centers pie chart**
-- Completed goals:
-  - Added third bottom tab (`Summary`) with previous/next day controls and swipe left/right day navigation.
-  - Added reusable date utilities (`addDaysToDateKey`, `formatDateLabel`) and switched date-key handling to local date parts.
-  - Enhanced `DailySummaryCard` with macro bar visualizations for protein, carbs, and fat (in addition to calorie pie).
-  - Extended food-entry data flow to be user/date aware:
-    - `FoodEntryRepository.listByDate(userId, date)`
-    - `DailySummaryService.forDate(userId, date)`
-    - repository supports `update` and `deleteById`
-  - Added food-entry edit/remove use cases (`UpdateFoodEntryUseCase`, `DeleteFoodEntryUseCase`).
-  - Reworked Home meal sections into row-based item lists with inline edit/remove controls.
-  - Expanded Add Food screen to also show/manage all foods in the selected meal group for the selected day (add/edit/remove in one place).
-  - Added profile persistence + use case for personal metrics (`LocalUserProfileRepository`, `SaveUserProfileUseCase`).
-  - Expanded Profile screen with age, height, current weight, target weight, current BMI, target BMI, healthy-range indicators, and BMI visualization scale.
-  - Updated dependency container/bootstrap to wire all new repositories/use cases.
-  - Added unit tests for BMI domain helpers, date utilities, and local food-entry repository behavior.
-  - Added unit tests for profile repository normalization and update-entry use case behavior.
-  - Full validation passed:
-    - `npm run typecheck`
-    - `npm test` (10 files, 27 tests)
-    - `npm run build`
-  - Added Capacitor mobile storage provider, container, and runtime detection to back all repositories/services with SQLite on native platforms while keeping the web container unchanged.
+- Status: **Expanded nutrition catalog with FoodData Central values; tests passing**
+- Completed goals (latest at top):
+  - Expanded `defaultNutritionCatalog` with a broad FoodData Central–based set (fruits, vegetables, grains, proteins, legumes, dairy/alternatives, fats/condiments, nuts/seeds, sweets, beverages) to improve lookup and suggestions.
+  - Added prior UX and data flow enhancements: Summary tab with day navigation, macro bars, user/date-aware repositories, edit/remove use cases, profile metrics, DI wiring, and mobile storage provider.
+  - Validation (latest): `npm test -- --silent --reporter default` ✅; previous runs: `npm run typecheck`, `npm run build`, `npm run mobile:bundle` ✅.
 - Current blockers:
 - None.
 - Latest run notes:
--  - Centered daily summary pie chart via layout tweaks; added loading spinner state and hides loading text once data is ready.
--  - Summary card now distinguishes loading vs empty states; mobile flex alignment retained.
--  - `npm test -- --silent --reporter default` passed (Vitest).
+  - Nutrition catalog now contains many more FDC-aligned foods with per-100g macros and common unit gram mappings to improve resolution and suggestions.
+  - `npm test -- --silent --reporter default` passed after catalog expansion.
 - Next actions:
 -  1. Monitor chunk size warning after adding heavier live-update metadata to ensure web build stays performant.
 -  2. Add integration/component tests for Home/AddFood meal-management UI flows (edit/remove/add in grouped views).

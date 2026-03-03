@@ -4,16 +4,16 @@
 
 - Date: **2026-03-03**
 - Typecheck: **PASS** (`npm run typecheck`) — previous run
-- Unit tests: **PASS** (`npm test -- --silent --reporter default`)
+- Unit tests: **PASS** (`npm test -- --silent --reporter default`) — post-catalog expansion
   - 10 test files passed
   - 27 tests passed
 - Build: **PASS** (`npm run build`) — previous run
 - Mobile bundle sync: **PASS** (`npm run mobile:bundle` → `npm run cap:sync`) — previous run
 - OTA/provider tests: **NOT ADDED YET**
 
-## Latest change quick check
+- Latest change quick check
 
-- UI polish: Summary pie now centered; loading uses spinner and disappears when data ready; empty state message when no summary. No new automated tests added; visual check recommended on Summary tab.
+- - Nutrition catalog massively expanded with FoodData Central per-100g values and common gram-per-unit mappings; search/suggestions should surface more items. No new automated tests added for catalog size; unit suite still green.
 
 ## Present test files
 
