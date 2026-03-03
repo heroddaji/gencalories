@@ -20,6 +20,7 @@ describe("createFoodEntry", () => {
     expect(entry.foodName).toBe("Chicken, Breast");
     expect(entry.normalizedFoodName).toBe("chicken breast");
     expect(entry.servingUnit).toBe("serving");
+    expect(entry.mealType).toBe("snack");
   });
 
   it("normalizes known serving unit synonyms", () => {

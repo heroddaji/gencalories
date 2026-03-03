@@ -41,3 +41,14 @@
 - Added Home/Profile bottom tab bar screen shell in `App.tsx`.
 - Moved daily goal editing into new `ProfilePage` screen.
 - Simplified `FoodEntryPage` into Home content without its own page-level header wrapper.
+- Added meal-based home dashboard UI with:
+  - top calorie summary pie against user target
+  - per-meal nutrition breakdown for breakfast/lunch/dinner/snacks
+  - per-meal add-food actions
+- Added `mealType` to `FoodEntry` domain and flow (`foodEntryFactory`, `LogFoodEntryUseCase`, local repository migration fallback).
+- Added new `AddFoodToMealPage` component for selecting foods from local catalog and logging to chosen meal.
+- Updated daily summary model and service for nullable calorie goal (`goalCalories`, `goalDelta`) and not-set insights.
+- Updated profile UI to show current target calorie state and support empty/not-set initial value.
+- Added mobile Ionic theme overrides in `src/theme.css` and applied centered app content container.
+- Updated unit tests for new `mealType` and nullable-goal behavior.
+- Re-validated with `npm run typecheck`, `npm test`, and `npm run build`.

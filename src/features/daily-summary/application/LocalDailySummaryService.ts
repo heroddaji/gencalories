@@ -5,11 +5,17 @@ import type {
 } from "@/app/di/contracts";
 import type { DailyConsumptionSummary, MacroTotals } from "@/shared/types/core";
 
-const DEFAULT_GOAL = 2000;
-
-const summarizeInsight = (totalCalories: number, goalDelta: number): string => {
+const summarizeInsight = (totalCalories: number, goalDelta: number | null): string => {
   if (totalCalories === 0) {
+    if (goalDelta === null) {
+      return "No foods logged yet today. Set a daily calorie target to track progress.";
+    }
+
     return "No foods logged yet today. Start by adding your first meal.";
+  }
+
+  if (goalDelta === null) {
+    return "You have no target calories set yet. Go to Profile to set your daily goal.";
   }
 
   if (goalDelta > 0) {
@@ -49,8 +55,7 @@ export class LocalDailySummaryService implements DailySummaryService {
       0,
     );
 
-    const goal = calorieGoal > 0 ? calorieGoal : DEFAULT_GOAL;
-    const goalDelta = goal - totalCalories;
+    const goalDelta = calorieGoal === null ? null : calorieGoal - totalCalories;
 
     return {
       date,
@@ -60,7 +65,8 @@ export class LocalDailySummaryService implements DailySummaryService {
         carbs: Math.round(macroTotals.carbs * 10) / 10,
         fat: Math.round(macroTotals.fat * 10) / 10,
       },
-      goalDelta: Math.round(goalDelta),
+      goalCalories: calorieGoal === null ? null : Math.round(calorieGoal),
+      goalDelta: goalDelta === null ? null : Math.round(goalDelta),
       insights: summarizeInsight(totalCalories, goalDelta),
     };
   }

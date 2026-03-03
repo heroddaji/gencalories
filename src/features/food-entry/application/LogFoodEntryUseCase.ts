@@ -7,11 +7,12 @@ import {
   createFoodEntry,
   type CreateFoodEntryInput,
 } from "@/features/food-entry/domain/foodEntryFactory";
-import type { FoodEntry } from "@/shared/types/core";
+import type { FoodEntry, MealType } from "@/shared/types/core";
 
 export interface LogFoodEntryInput {
   userId: string;
   foodName: string;
+  mealType?: MealType;
   quantity: number;
   servingUnit: string;
   consumedAt?: string;
@@ -35,6 +36,7 @@ export class LogFoodEntryUseCase {
     const entryInput: CreateFoodEntryInput = {
       userId: input.userId,
       foodName: input.foodName,
+      mealType: input.mealType,
       quantity: input.quantity,
       servingUnit: input.servingUnit,
       consumedAt,

@@ -1,8 +1,9 @@
 import type { FoodEntryRepository, StorageProvider } from "@/app/di/contracts";
-import type { FoodEntry } from "@/shared/types/core";
+import type { FoodEntry, MealType } from "@/shared/types/core";
 import { isSameDateKey } from "@/shared/utils/date";
 
 const STORAGE_KEY = "food_entries_v1";
+const VALID_MEAL_TYPES: ReadonlySet<MealType> = new Set(["breakfast", "lunch", "dinner", "snack"]);
 
 export class LocalFoodEntryRepository implements FoodEntryRepository {
   constructor(private readonly storage: StorageProvider) {}
@@ -27,7 +28,17 @@ export class LocalFoodEntryRepository implements FoodEntryRepository {
 
     try {
       const parsed = JSON.parse(raw) as FoodEntry[];
-      return Array.isArray(parsed) ? parsed : [];
+      if (!Array.isArray(parsed)) {
+        return [];
+      }
+
+      return parsed.map((entry) => {
+        const mealType = VALID_MEAL_TYPES.has(entry.mealType) ? entry.mealType : "snack";
+        return {
+          ...entry,
+          mealType,
+        };
+      });
     } catch {
       return [];
     }

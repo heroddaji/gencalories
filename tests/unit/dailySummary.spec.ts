@@ -19,9 +19,9 @@ class StubFoodEntryRepository implements FoodEntryRepository {
 }
 
 class StubUserGoalRepository implements UserGoalRepository {
-  constructor(private readonly goal: number) {}
+  constructor(private readonly goal: number | null) {}
 
-  async getDailyCalorieGoal(_userId: string): Promise<number> {
+  async getDailyCalorieGoal(_userId: string): Promise<number | null> {
     return this.goal;
   }
 
@@ -38,6 +38,7 @@ describe("LocalDailySummaryService", () => {
         userId: "u1",
         foodName: "banana",
         normalizedFoodName: "banana",
+        mealType: "breakfast",
         quantity: 1,
         servingUnit: "serving",
         consumedAt: "2026-03-02T08:00:00.000Z",
@@ -53,6 +54,7 @@ describe("LocalDailySummaryService", () => {
         userId: "u1",
         foodName: "egg",
         normalizedFoodName: "egg",
+        mealType: "lunch",
         quantity: 2,
         servingUnit: "serving",
         consumedAt: "2026-03-02T12:00:00.000Z",
@@ -74,7 +76,41 @@ describe("LocalDailySummaryService", () => {
     const summary = await service.forDate("2026-03-02");
 
     expect(summary.totalCalories).toBe(261);
+    expect(summary.goalCalories).toBe(2000);
     expect(summary.goalDelta).toBe(1739);
     expect(summary.macroTotals.protein).toBe(13.9);
+  });
+
+  it("returns null goal values when user has not set target calories", async () => {
+    const entries: FoodEntry[] = [
+      {
+        id: "1",
+        userId: "u1",
+        foodName: "banana",
+        normalizedFoodName: "banana",
+        mealType: "snack",
+        quantity: 1,
+        servingUnit: "serving",
+        consumedAt: "2026-03-02T08:00:00.000Z",
+        nutritionSnapshot: {
+          calories: 105,
+          protein: 1.3,
+          carbs: 27,
+          fat: 0.4,
+        },
+      },
+    ];
+
+    const service = new LocalDailySummaryService(
+      new StubFoodEntryRepository(entries),
+      new StubUserGoalRepository(null),
+      "u1",
+    );
+
+    const summary = await service.forDate("2026-03-02");
+
+    expect(summary.goalCalories).toBeNull();
+    expect(summary.goalDelta).toBeNull();
+    expect(summary.insights).toMatch(/no target calories/i);
   });
 });

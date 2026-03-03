@@ -7,6 +7,7 @@ import {
   IonInput,
   IonItem,
   IonLabel,
+  IonText,
 } from "@ionic/react";
 import { useEffect, useState } from "react";
 import type { AppContainer } from "@/app/di/container";
@@ -25,13 +26,15 @@ const parsePositiveNumber = (value: string): number | null => {
 };
 
 export const ProfilePage = ({ container }: ProfilePageProps): JSX.Element => {
-  const [dailyGoal, setDailyGoal] = useState("2000");
+  const [dailyGoal, setDailyGoal] = useState("");
+  const [currentGoal, setCurrentGoal] = useState<number | null>(null);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
     const loadGoal = async (): Promise<void> => {
       const goal = await container.userGoalRepository.getDailyCalorieGoal(container.userId);
-      setDailyGoal(String(goal));
+      setCurrentGoal(goal);
+      setDailyGoal(goal === null ? "" : String(goal));
     };
 
     void loadGoal();
@@ -46,6 +49,7 @@ export const ProfilePage = ({ container }: ProfilePageProps): JSX.Element => {
 
     try {
       await container.setDailyGoalUseCase.execute(container.userId, parsedGoal);
+      setCurrentGoal(Math.round(parsedGoal));
       setMessage(`Daily goal updated to ${Math.round(parsedGoal)} kcal.`);
     } catch {
       setMessage("Unable to update daily goal.");
@@ -53,29 +57,38 @@ export const ProfilePage = ({ container }: ProfilePageProps): JSX.Element => {
   };
 
   return (
-    <>
-      <IonCard>
-        <IonCardHeader>
-          <IonCardTitle>Profile</IonCardTitle>
-        </IonCardHeader>
-        <IonCardContent>
-          <IonItem>
-            <IonLabel position="stacked">Daily Calorie Goal</IonLabel>
-            <IonInput
-              type="number"
-              value={dailyGoal}
-              onIonInput={(event) => {
-                setDailyGoal(event.detail.value ?? "");
-              }}
-            />
-          </IonItem>
-          <IonButton expand="block" onClick={() => void handleSetGoal()}>
-            Save Goal
-          </IonButton>
+    <IonCard className="profile-goal-card">
+      <IonCardHeader>
+        <IonCardTitle>Profile</IonCardTitle>
+      </IonCardHeader>
+      <IonCardContent>
+        <IonText color="medium">
+          <p>
+            Current target calories: <strong>{currentGoal ?? "Not set"}</strong>
+          </p>
+        </IonText>
 
-          {message ? <p>{message}</p> : null}
-        </IonCardContent>
-      </IonCard>
-    </>
+        <IonItem>
+          <IonLabel position="stacked">Daily Calorie Goal</IonLabel>
+          <IonInput
+            type="number"
+            value={dailyGoal}
+            placeholder="e.g. 2000"
+            onIonInput={(event) => {
+              setDailyGoal(event.detail.value ?? "");
+            }}
+          />
+        </IonItem>
+        <IonButton expand="block" onClick={() => void handleSetGoal()}>
+          Save Goal
+        </IonButton>
+
+        {message ? (
+          <IonText color="success">
+            <p>{message}</p>
+          </IonText>
+        ) : null}
+      </IonCardContent>
+    </IonCard>
   );
 };

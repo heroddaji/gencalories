@@ -1,15 +1,18 @@
-import type { FoodEntry, NutritionSnapshot } from "@/shared/types/core";
+import type { FoodEntry, MealType, NutritionSnapshot } from "@/shared/types/core";
 import { normalizeServingUnit } from "@/features/food-entry/domain/servingUnits";
 import { normalizeFoodName } from "@/shared/utils/text";
 
 export interface CreateFoodEntryInput {
   userId: string;
   foodName: string;
+  mealType?: MealType;
   quantity: number;
   servingUnit: string;
   consumedAt: string;
   nutritionSnapshot: NutritionSnapshot;
 }
+
+const MEAL_TYPES: ReadonlySet<MealType> = new Set(["breakfast", "lunch", "dinner", "snack"]);
 
 const createId = (): string => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
@@ -22,6 +25,7 @@ const createId = (): string => {
 export const createFoodEntry = (input: CreateFoodEntryInput): FoodEntry => {
   const foodName = input.foodName.trim();
   const servingUnit = normalizeServingUnit(input.servingUnit);
+  const mealType = input.mealType ?? "snack";
 
   if (!foodName) {
     throw new Error("Food name is required.");
@@ -35,11 +39,16 @@ export const createFoodEntry = (input: CreateFoodEntryInput): FoodEntry => {
     throw new Error("Quantity must be greater than zero.");
   }
 
+  if (!MEAL_TYPES.has(mealType)) {
+    throw new Error("Meal type is invalid.");
+  }
+
   return {
     id: createId(),
     userId: input.userId,
     foodName,
     normalizedFoodName: normalizeFoodName(foodName),
+    mealType,
     quantity: input.quantity,
     servingUnit,
     consumedAt: input.consumedAt,

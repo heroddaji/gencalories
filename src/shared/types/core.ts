@@ -4,6 +4,8 @@ export interface MacroTotals {
   fat: number;
 }
 
+export type MealType = "breakfast" | "lunch" | "dinner" | "snack";
+
 export interface NutritionSnapshot extends MacroTotals {
   calories: number;
 }
@@ -18,6 +20,7 @@ export interface FoodEntry {
   userId: string;
   foodName: string;
   normalizedFoodName: string;
+  mealType: MealType;
   quantity: number;
   servingUnit: string;
   consumedAt: string;
@@ -36,6 +39,7 @@ export interface DailyConsumptionSummary {
   date: string;
   totalCalories: number;
   macroTotals: MacroTotals;
-  goalDelta: number;
+  goalCalories: number | null;
+  goalDelta: number | null;
   insights: string;
 }

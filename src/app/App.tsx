@@ -34,11 +34,13 @@ export const App = (): JSX.Element => {
         </IonHeader>
 
         <IonContent className="ion-padding">
-          {activeTab === "home" ? (
-            <FoodEntryPage container={container} />
-          ) : (
-            <ProfilePage container={container} />
-          )}
+          <div className="app-content">
+            {activeTab === "home" ? (
+              <FoodEntryPage container={container} />
+            ) : (
+              <ProfilePage container={container} />
+            )}
+          </div>
         </IonContent>
 
         <IonFooter>

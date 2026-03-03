@@ -75,6 +75,6 @@ export interface DailySummaryService {
 }
 
 export interface UserGoalRepository {
-  getDailyCalorieGoal(userId: string): Promise<number>;
+  getDailyCalorieGoal(userId: string): Promise<number | null>;
   setDailyCalorieGoal(userId: string, calories: number): Promise<void>;
 }
