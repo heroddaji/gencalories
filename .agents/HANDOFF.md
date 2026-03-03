@@ -42,10 +42,15 @@
 - `npm run typecheck` ✅
 - `npm test` ✅ (10 files, 27 tests)
 - `npm run build` ✅
+- Latest: `npm run mobile:bundle` ✅ (includes Capacitor sync)
 
 ## Current blockers
 
 - None.
+
+## Notes from latest run
+
+- Fixed JSX namespace errors by returning `ReactElement` and ensuring React typings are loaded; typecheck/build now pass.
 
 ## Immediate next steps
 

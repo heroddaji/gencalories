@@ -5,6 +5,12 @@ const config: CapacitorConfig = {
   appName: "GenCalories",
   webDir: "dist",
   bundledWebRuntime: false,
+  plugins: {
+    LiveUpdate: {
+      appId: "f912409e-94bd-4072-9dc6-e3f1f4df981a",
+      autoUpdateStrategy: "background",
+    },
+  },
 };
 
 export default config;

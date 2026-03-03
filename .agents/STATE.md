@@ -25,6 +25,9 @@
   - Added Capacitor mobile storage provider, container, and runtime detection to back all repositories/services with SQLite on native platforms while keeping the web container unchanged.
 - Current blockers:
 - None.
+- Latest run notes:
+-  - Fixed TypeScript JSX namespace errors by returning ReactElement and ensuring react typings loaded; builds now pass.
+-  - `npm run build` and `npm run mobile:bundle` (Capacitor sync) succeed.
 - Next actions:
 -  1. Monitor chunk size warning after adding heavier live-update metadata to ensure web build stays performant.
 -  2. Add integration/component tests for Home/AddFood meal-management UI flows (edit/remove/add in grouped views).

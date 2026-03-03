@@ -9,7 +9,7 @@ import {
   IonSelectOption,
   IonText,
 } from "@ionic/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactElement } from "react";
 import type { AppContainer } from "@/app/di/container";
 import { DailySummaryCard } from "@/features/daily-summary/presentation/DailySummaryCard";
 import { mealTypeLabels, mealTypeOrder } from "@/features/food-entry/domain/mealTypes";
@@ -84,7 +84,7 @@ const summarizeMeals = (entries: FoodEntry[]): Record<MealType, MealSummary> => 
   };
 };
 
-export const FoodEntryPage = ({ container }: FoodEntryPageProps): JSX.Element => {
+export const FoodEntryPage = ({ container }: FoodEntryPageProps): ReactElement => {
   const today = useMemo(() => toDateKey(new Date()), []);
 
   const [entries, setEntries] = useState<FoodEntry[]>([]);

@@ -9,7 +9,7 @@ import {
   IonLabel,
   IonText,
 } from "@ionic/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import type { AppContainer } from "@/app/di/container";
 import {
   bmiScalePosition,
@@ -32,7 +32,7 @@ const parsePositiveNumber = (value: string): number | null => {
   return parsed;
 };
 
-export const ProfilePage = ({ container }: ProfilePageProps): JSX.Element => {
+export const ProfilePage = ({ container }: ProfilePageProps): ReactElement => {
   const [dailyGoal, setDailyGoal] = useState("");
   const [currentGoal, setCurrentGoal] = useState<number | null>(null);
   const [age, setAge] = useState("");

@@ -7,7 +7,8 @@
 - Unit tests: **PASS** (`npm test`)
   - 10 test files passed
   - 27 tests passed
-- Build: **PASS** (`npm run build`)
+ Build: **PASS** (`npm run build`)
+- Mobile bundle sync: **PASS** (`npm run mobile:bundle` → `npm run cap:sync`)
 - OTA/provider tests: **NOT ADDED YET**
 
 ## Present test files
@@ -31,3 +32,4 @@
 - Daily summary card now includes three macro bars (protein, carbs, fat) in addition to calorie pie.
 - Profile now supports age/height/current weight/target weight with BMI calculations and healthy-range indicators.
 - Date utilities now include day-shifting and label-format helpers used by Summary tab and date-aware flows.
+- Latest run fixed JSX namespace typing issues by returning `ReactElement` and ensuring React typings load; typecheck/build/mobile bundle all pass.

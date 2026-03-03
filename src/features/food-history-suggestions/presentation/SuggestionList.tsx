@@ -6,6 +6,7 @@ import {
   IonNote,
   IonText,
 } from "@ionic/react";
+import type { ReactElement } from "react";
 
 export interface SuggestionItemView {
   key: string;
@@ -27,7 +28,7 @@ export const SuggestionList = ({
   suggestions,
   onSelect,
   onDelete,
-}: SuggestionListProps): JSX.Element | null => {
+}: SuggestionListProps): ReactElement | null => {
   if (suggestions.length === 0) {
     return null;
   }

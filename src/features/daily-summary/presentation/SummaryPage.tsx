@@ -1,5 +1,5 @@
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText } from "@ionic/react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from "react";
 import type { AppContainer } from "@/app/di/container";
 import { DailySummaryCard } from "@/features/daily-summary/presentation/DailySummaryCard";
 import type { DailyConsumptionSummary } from "@/shared/types/core";
@@ -9,7 +9,7 @@ interface SummaryPageProps {
   container: AppContainer;
 }
 
-export const SummaryPage = ({ container }: SummaryPageProps): JSX.Element => {
+export const SummaryPage = ({ container }: SummaryPageProps): ReactElement => {
   const [selectedDate, setSelectedDate] = useState(() => toDateKey(new Date()));
   const [summary, setSummary] = useState<DailyConsumptionSummary | null>(null);
   const touchStartXRef = useRef<number | null>(null);

@@ -20,7 +20,9 @@
     "package:ios": "npm run mobile:bundle && npx cap build ios"
   },
   "dependencies": {
+    "@capacitor-community/sqlite": "^8.0.0",
     "@capacitor/core": "^8.1.0",
+    "@capawesome/capacitor-live-update": "^8.2.0",
     "@ionic/core": "^8.7.18",
     "@ionic/react": "^8.7.18",
     "ionicons": "^8.0.13",

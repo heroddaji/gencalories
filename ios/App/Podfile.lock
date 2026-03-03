@@ -1,22 +1,54 @@
 PODS:
-  - Capacitor (7.5.0):
+  - Alamofire (5.10.2)
+  - Capacitor (8.1.0):
     - CapacitorCordova
-  - CapacitorCordova (7.5.0)
+  - CapacitorCommunitySqlite (8.0.0):
+    - Capacitor
+    - SQLCipher
+    - ZIPFoundation
+  - CapacitorCordova (8.1.0)
+  - CapawesomeCapacitorLiveUpdate (8.2.0):
+    - Alamofire (~> 5.10.2)
+    - Capacitor
+    - ZIPFoundation (~> 0.9.0)
+  - SQLCipher (4.10.0):
+    - SQLCipher/standard (= 4.10.0)
+  - SQLCipher/common (4.10.0)
+  - SQLCipher/standard (4.10.0):
+    - SQLCipher/common
+  - ZIPFoundation (0.9.20)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorCommunitySqlite (from `../../node_modules/@capacitor-community/sqlite`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CapawesomeCapacitorLiveUpdate (from `../../node_modules/@capawesome/capacitor-live-update`)"
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - SQLCipher
+    - ZIPFoundation
 
 EXTERNAL SOURCES:
   Capacitor:
     :path: "../../node_modules/@capacitor/ios"
+  CapacitorCommunitySqlite:
+    :path: "../../node_modules/@capacitor-community/sqlite"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
+  CapawesomeCapacitorLiveUpdate:
+    :path: "../../node_modules/@capawesome/capacitor-live-update"
 
 SPEC CHECKSUMS:
-  Capacitor: 0a78ec6b54580fa055c11744a4e83cd7942d98ca
-  CapacitorCordova: ae35646a9b46cfd00d637f195509c86594026aad
+  Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
+  Capacitor: 47b825120c6b8b6d6f9f053e9350a8960d436710
+  CapacitorCommunitySqlite: 8a61c1d599927d4321c13b28f132de8ca94b6d95
+  CapacitorCordova: e8b76fd95fc1e157775abc484c59cc0de464095d
+  CapawesomeCapacitorLiveUpdate: ba874f846399d46c808a735867bb48bec2210fb8
+  SQLCipher: eb79c64049cb002b4e9fcb30edb7979bf4706dfc
+  ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
 
-PODFILE CHECKSUM: e5aad413742a07f9e736126612b43b6c058babcd
+PODFILE CHECKSUM: 8937f949f031ff61f3ae1c88db1fc04731d1621e
 
 COCOAPODS: 1.16.2

@@ -1,4 +1,5 @@
 import { IonCard, IonCardContent, IonCardHeader, IonCardTitle } from "@ionic/react";
+import type { ReactElement } from "react";
 import type { DailyConsumptionSummary } from "@/shared/types/core";
 
 interface DailySummaryCardProps {
@@ -15,7 +16,7 @@ const macroBarPalette = {
 export const DailySummaryCard = ({
   summary,
   title = "Today's Summary",
-}: DailySummaryCardProps): JSX.Element => {
+}: DailySummaryCardProps): ReactElement => {
   if (!summary) {
     return (
       <IonCard>

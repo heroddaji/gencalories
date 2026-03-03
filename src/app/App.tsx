@@ -23,7 +23,7 @@ import { ProfilePage } from "@/features/user-profile-goals/presentation/ProfileP
 
 setupIonicReact();
 
-export const App = (): JSX.Element => {
+export const App = (): React.ReactElement => {
   const container = useMemo(
     () =>
       Capacitor.isNativePlatform() ? createMobileAppContainer() : createWebAppContainer(),

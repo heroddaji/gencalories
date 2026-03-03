@@ -15,7 +15,7 @@ import {
   IonText,
 } from "@ionic/react";
 import { arrowBackOutline } from "ionicons/icons";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactElement } from "react";
 import type { AppContainer } from "@/app/di/container";
 import { mealTypeLabels } from "@/features/food-entry/domain/mealTypes";
 import {
@@ -50,7 +50,7 @@ export const AddFoodToMealPage = ({
   mealType,
   onBack,
   onChanged,
-}: AddFoodToMealPageProps): JSX.Element => {
+}: AddFoodToMealPageProps): ReactElement => {
   const [query, setQuery] = useState("");
   const [availableFoods, setAvailableFoods] = useState<string[]>([]);
   const [mealEntries, setMealEntries] = useState<FoodEntry[]>([]);
