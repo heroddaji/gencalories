@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">GenCalories</string>
+    <string name="title_activity_main">GenCalories</string>
+    <string name="package_name">com.gencalories.app</string>
+    <string name="custom_url_scheme">com.gencalories.app</string>
+</resources>
