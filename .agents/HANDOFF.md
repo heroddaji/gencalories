@@ -2,15 +2,16 @@
 
 ## What was completed (latest)
 
-- Added Profile tab footer row showing app version and bundle/build version via shared `versionInfo` in `ProfilePage.tsx` (last row).
+- Centered daily summary pie chart by flex centering; added loading spinner state and removed lingering "Loading summary…" once data is ready. Summary card now shows explicit empty-state message when no data.
+- Wired loading flag from `SummaryPage` into `DailySummaryCard` and styled loading row.
 - (Previous context retained) Summary tab, date-aware flows, BMI/profile expansion, meal management, repositories/use cases, and test suite additions.
 
 ## Validation status
 
-- `npm run typecheck` ✅
-- `npm test` ✅ (10 files, 27 tests)
-- `npm run build` ✅
-- Latest: `npm run mobile:bundle` ✅ (includes Capacitor sync)
+- `npm run typecheck` ✅ (previous run)
+- `npm test -- --silent --reporter default` ✅ (latest)
+- `npm run build` ✅ (previous run)
+- `npm run mobile:bundle` ✅ (previous run; includes Capacitor sync)
 
 ## Current blockers
 
@@ -18,7 +19,8 @@
 
 ## Notes from latest run
 
-- Fixed JSX namespace errors by returning `ReactElement` and ensuring React typings are loaded; typecheck/build now pass.
+- Loading state now separated from absence of data; spinner shows only while fetching.
+- Mobile layout keeps pie centered on small widths.
 
 ## Immediate next steps
 

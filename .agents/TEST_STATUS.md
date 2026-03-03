@@ -3,17 +3,17 @@
 ## Last run summary
 
 - Date: **2026-03-03**
-- Typecheck: **PASS** (`npm run typecheck`)
-- Unit tests: **PASS** (`npm test`)
+- Typecheck: **PASS** (`npm run typecheck`) — previous run
+- Unit tests: **PASS** (`npm test -- --silent --reporter default`)
   - 10 test files passed
   - 27 tests passed
- Build: **PASS** (`npm run build`)
-- Mobile bundle sync: **PASS** (`npm run mobile:bundle` → `npm run cap:sync`)
+- Build: **PASS** (`npm run build`) — previous run
+- Mobile bundle sync: **PASS** (`npm run mobile:bundle` → `npm run cap:sync`) — previous run
 - OTA/provider tests: **NOT ADDED YET**
 
 ## Latest change quick check
 
-- UI-only addition: Profile tab shows app version and bundle/build version; no new tests added. Recommend quick manual visual check in Profile tab.
+- UI polish: Summary pie now centered; loading uses spinner and disappears when data ready; empty state message when no summary. No new automated tests added; visual check recommended on Summary tab.
 
 ## Present test files
 

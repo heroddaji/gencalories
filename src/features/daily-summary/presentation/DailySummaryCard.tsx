@@ -1,10 +1,11 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardTitle } from "@ionic/react";
+import { IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonSpinner } from "@ionic/react";
 import type { ReactElement } from "react";
 import type { DailyConsumptionSummary } from "@/shared/types/core";
 
 interface DailySummaryCardProps {
   summary: DailyConsumptionSummary | null;
   title?: string;
+  isLoading?: boolean;
 }
 
 const macroBarPalette = {
@@ -16,14 +17,31 @@ const macroBarPalette = {
 export const DailySummaryCard = ({
   summary,
   title = "Today's Summary",
+  isLoading = false,
 }: DailySummaryCardProps): ReactElement => {
-  if (!summary) {
+  if (isLoading) {
     return (
       <IonCard>
         <IonCardHeader>
           <IonCardTitle>{title}</IonCardTitle>
         </IonCardHeader>
-        <IonCardContent>Loading summary…</IonCardContent>
+        <IonCardContent className="daily-summary-loading">
+          <IonSpinner name="crescent" />
+          <span>Loading summary…</span>
+        </IonCardContent>
+      </IonCard>
+    );
+  }
+
+  if (!summary) {
+    return (
+      <IonCard className="daily-summary-card">
+        <IonCardHeader>
+          <IonCardTitle>{title}</IonCardTitle>
+        </IonCardHeader>
+        <IonCardContent>
+          <div className="daily-summary-empty">No summary available for this date yet.</div>
+        </IonCardContent>
       </IonCard>
     );
   }
@@ -53,17 +71,17 @@ export const DailySummaryCard = ({
         <div className="daily-summary-progress">
           <div className="daily-summary-pie" style={pieStyle}>
             <div className="daily-summary-pie-center">
-              <strong>{summary.totalCalories}</strong>
+              <strong>{summary?.totalCalories ?? "--"}</strong>
               <span>kcal</span>
             </div>
           </div>
-          <div>
+          <div className="daily-summary-progress-details">
             <p>
               Target: <strong>{targetCalories ?? "Not set"}</strong>
             </p>
             <p>
-              Goal delta: <strong>{summary.goalDelta ?? "--"}</strong>
-              {summary.goalDelta === null ? "" : " kcal"}
+              Goal delta: <strong>{summary?.goalDelta ?? "--"}</strong>
+              {summary?.goalDelta === null || summary?.goalDelta === undefined ? "" : " kcal"}
             </p>
           </div>
         </div>

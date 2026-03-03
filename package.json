@@ -16,6 +16,7 @@
     "mobile:bundle": "npm run build && npm run cap:sync",
     "mobile:open:android": "npx cap open android",
     "mobile:open:ios": "npx cap open ios",
+    "mobile:live-update": "npx @capawesome/cli apps:liveupdates:upload",
     "package:android": "npm run mobile:bundle && npx cap build android",
     "package:ios": "npm run mobile:bundle && npx cap build ios"
   },

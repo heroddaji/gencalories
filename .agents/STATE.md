@@ -1,7 +1,7 @@
 # STATE
 
 - Phase: **Phase 1 MVP (web-first + Capacitor-ready structure)**
-- Status: **Core UX expansion complete: per-day summary tab, date-aware meal management, richer profile/BMI dashboard, and user/date-aware entry persistence**
+- Status: **Core UX expansion complete; latest change aligns summary loading state and centers pie chart**
 - Completed goals:
   - Added third bottom tab (`Summary`) with previous/next day controls and swipe left/right day navigation.
   - Added reusable date utilities (`addDaysToDateKey`, `formatDateLabel`) and switched date-key handling to local date parts.
@@ -26,9 +26,9 @@
 - Current blockers:
 - None.
 - Latest run notes:
--  - Fixed TypeScript JSX namespace errors by returning ReactElement and ensuring react typings loaded; builds now pass.
--  - `npm run build` and `npm run mobile:bundle` (Capacitor sync) succeed.
--  - Added Profile tab footer row showing app version and bundle/build version from shared versionInfo.
+-  - Centered daily summary pie chart via layout tweaks; added loading spinner state and hides loading text once data is ready.
+-  - Summary card now distinguishes loading vs empty states; mobile flex alignment retained.
+-  - `npm test -- --silent --reporter default` passed (Vitest).
 - Next actions:
 -  1. Monitor chunk size warning after adding heavier live-update metadata to ensure web build stays performant.
 -  2. Add integration/component tests for Home/AddFood meal-management UI flows (edit/remove/add in grouped views).

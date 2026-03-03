@@ -12,13 +12,16 @@ interface SummaryPageProps {
 export const SummaryPage = ({ container }: SummaryPageProps): ReactElement => {
   const [selectedDate, setSelectedDate] = useState(() => toDateKey(new Date()));
   const [summary, setSummary] = useState<DailyConsumptionSummary | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const touchStartXRef = useRef<number | null>(null);
 
   const dateLabel = useMemo(() => formatDateLabel(selectedDate), [selectedDate]);
 
   const refreshSummary = useCallback(async (): Promise<void> => {
+    setIsLoading(true);
     const nextSummary = await container.dailySummaryService.forDate(container.userId, selectedDate);
     setSummary(nextSummary);
+    setIsLoading(false);
   }, [container, selectedDate]);
 
   useEffect(() => {
@@ -71,7 +74,7 @@ export const SummaryPage = ({ container }: SummaryPageProps): ReactElement => {
         </IonCardContent>
       </IonCard>
 
-      <DailySummaryCard summary={summary} title={`Summary • ${dateLabel}`} />
+      <DailySummaryCard summary={summary} title={`Summary • ${dateLabel}`} isLoading={isLoading} />
     </div>
   );
 };
