@@ -1,3 +1,10 @@
 node_modules
 dist
 .DS_Store
+android/.idea/AndroidProjectSystem.xml
+android/.idea/compiler.xml
+android/.idea/deploymentTargetSelector.xml
+android/.idea/migrations.xml
+android/.idea/misc.xml
+android/.idea/runConfigurations.xml
+android/.idea/studiobot.xml
