@@ -33,12 +33,11 @@ export class LocalDailySummaryService implements DailySummaryService {
   constructor(
     private readonly entryRepository: FoodEntryRepository,
     private readonly goalRepository: UserGoalRepository,
-    private readonly userId: string,
   ) {}
 
-  async forDate(date: string): Promise<DailyConsumptionSummary> {
-    const entries = await this.entryRepository.listByDate(date);
-    const calorieGoal = await this.goalRepository.getDailyCalorieGoal(this.userId);
+  async forDate(userId: string, date: string): Promise<DailyConsumptionSummary> {
+    const entries = await this.entryRepository.listByDate(userId, date);
+    const calorieGoal = await this.goalRepository.getDailyCalorieGoal(userId);
 
     const macroTotals = entries.reduce<MacroTotals>(
       (accumulator, entry) => {

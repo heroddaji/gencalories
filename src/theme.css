@@ -70,12 +70,47 @@ ion-content {
   color: var(--ion-color-medium-shade);
 }
 
-.meal-breakdown-row {
+.daily-summary-macro-bars {
+  display: grid;
+  gap: 10px;
+  margin: 10px 0 12px;
+}
+
+.daily-summary-macro-row {
+  display: grid;
+  gap: 6px;
+}
+
+.daily-summary-macro-labels {
   display: flex;
   justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.daily-summary-macro-track {
+  height: 10px;
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.daily-summary-macro-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.date-nav-row {
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
-  padding: 10px 0;
+  margin-bottom: 8px;
+}
+
+.meal-breakdown-row {
+  display: grid;
+  gap: 8px;
+  padding: 12px 0;
   border-bottom: 1px solid rgba(148, 163, 184, 0.25);
 }
 
@@ -92,6 +127,85 @@ ion-content {
   margin: 0;
   color: var(--ion-color-dark-tint);
   font-size: 0.9rem;
+}
+
+.meal-entry-list {
+  display: grid;
+  gap: 8px;
+}
+
+.meal-entry-row {
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 12px;
+  padding: 8px;
+  display: grid;
+  gap: 8px;
+}
+
+.meal-entry-row p {
+  margin: 2px 0 0;
+  color: var(--ion-color-medium-shade);
+  font-size: 0.85rem;
+}
+
+.meal-entry-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.meal-entry-edit-grid {
+  display: grid;
+  gap: 6px;
+}
+
+.bmi-summary-grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.bmi-summary-grid p {
+  margin: 4px 0;
+}
+
+.bmi-scale {
+  margin: 12px 0;
+  position: relative;
+  height: 18px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #38bdf8 0%, #22c55e 50%, #f97316 75%, #ef4444 100%);
+}
+
+.bmi-healthy-band {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  left: 46.25%;
+  width: 16%;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  border-radius: 999px;
+}
+
+.bmi-marker {
+  position: absolute;
+  top: -12px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #111827;
+  color: #fff;
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-50%);
+}
+
+.bmi-marker.target {
+  background: #4f46e5;
+  top: 12px;
 }
 
 .add-food-header-row {
@@ -112,6 +226,11 @@ ion-content {
     align-items: flex-start;
   }
 
+  .date-nav-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .daily-summary-pie {
     width: 112px;
     height: 112px;
@@ -120,5 +239,9 @@ ion-content {
   .daily-summary-pie-center {
     width: 72px;
     height: 72px;
+  }
+
+  .bmi-summary-grid {
+    grid-template-columns: 1fr;
   }
 }

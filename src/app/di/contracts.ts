@@ -4,6 +4,7 @@ import type {
   FoodHistoryItem,
   NutritionSnapshot,
   Serving,
+  UserProfile,
 } from "@/shared/types/core";
 
 export interface NutritionProvider {
@@ -67,14 +68,21 @@ export interface LiveUpdateProvider {
 
 export interface FoodEntryRepository {
   save(entry: FoodEntry): Promise<void>;
-  listByDate(date: string): Promise<FoodEntry[]>;
+  update(entry: FoodEntry): Promise<void>;
+  deleteById(userId: string, entryId: string): Promise<void>;
+  listByDate(userId: string, date: string): Promise<FoodEntry[]>;
 }
 
 export interface DailySummaryService {
-  forDate(date: string): Promise<DailyConsumptionSummary>;
+  forDate(userId: string, date: string): Promise<DailyConsumptionSummary>;
 }
 
 export interface UserGoalRepository {
   getDailyCalorieGoal(userId: string): Promise<number | null>;
   setDailyCalorieGoal(userId: string, calories: number): Promise<void>;
+}
+
+export interface UserProfileRepository {
+  getProfile(userId: string): Promise<UserProfile>;
+  saveProfile(userId: string, profile: UserProfile): Promise<void>;
 }

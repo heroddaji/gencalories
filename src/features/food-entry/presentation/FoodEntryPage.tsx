@@ -4,9 +4,9 @@ import {
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
-  IonItem,
-  IonLabel,
-  IonList,
+  IonInput,
+  IonSelect,
+  IonSelectOption,
   IonText,
 } from "@ionic/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -14,6 +14,12 @@ import type { AppContainer } from "@/app/di/container";
 import { DailySummaryCard } from "@/features/daily-summary/presentation/DailySummaryCard";
 import { mealTypeLabels, mealTypeOrder } from "@/features/food-entry/domain/mealTypes";
 import { AddFoodToMealPage } from "@/features/food-entry/presentation/AddFoodToMealPage";
+import {
+  CUSTOM_SERVING_UNIT,
+  DEFAULT_SERVING_UNIT,
+  normalizeServingUnit,
+  predefinedServingUnits,
+} from "@/features/food-entry/domain/servingUnits";
 import type { LiveUpdateState } from "@/app/di/contracts";
 import type {
   DailyConsumptionSummary,
@@ -85,13 +91,17 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): JSX.Element =>
   const [message, setMessage] = useState("");
   const [liveUpdateState, setLiveUpdateState] = useState<LiveUpdateState | null>(null);
   const [mealInAddMode, setMealInAddMode] = useState<MealType | null>(null);
+  const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
+  const [editQuantity, setEditQuantity] = useState("");
+  const [editServingUnit, setEditServingUnit] = useState(DEFAULT_SERVING_UNIT);
+  const [editCustomServingUnit, setEditCustomServingUnit] = useState("");
 
   const mealSummaries = useMemo(() => summarizeMeals(entries), [entries]);
 
   const refreshDashboard = useCallback(async () => {
     const [nextEntries, nextSummary] = await Promise.all([
-      container.listDailyEntriesUseCase.execute(today),
-      container.dailySummaryService.forDate(today),
+      container.listDailyEntriesUseCase.execute(container.userId, today),
+      container.dailySummaryService.forDate(container.userId, today),
     ]);
 
     setEntries(nextEntries);
@@ -125,21 +135,94 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): JSX.Element =>
     void initialize();
   }, [container, refreshDashboard]);
 
-  const handleAddedToMeal = async (nextMessage: string): Promise<void> => {
+  const handleMealDataChanged = async (nextMessage?: string): Promise<void> => {
     await refreshDashboard();
-    setMealInAddMode(null);
-    setMessage(nextMessage);
+    if (nextMessage) {
+      setMessage(nextMessage);
+    }
   };
+
+  const startEditingEntry = (entry: FoodEntry): void => {
+    setEditingEntryId(entry.id);
+    setEditQuantity(String(entry.quantity));
+    setEditServingUnit(
+      predefinedServingUnits.some((unit) => unit.value === entry.servingUnit)
+        ? entry.servingUnit
+        : CUSTOM_SERVING_UNIT,
+    );
+    setEditCustomServingUnit(
+      predefinedServingUnits.some((unit) => unit.value === entry.servingUnit)
+        ? ""
+        : entry.servingUnit,
+    );
+  };
+
+  const cancelEditing = (): void => {
+    setEditingEntryId(null);
+    setEditQuantity("");
+    setEditServingUnit(DEFAULT_SERVING_UNIT);
+    setEditCustomServingUnit("");
+  };
+
+  const handleSaveEntry = async (entry: FoodEntry): Promise<void> => {
+    const parsedQuantity = Number(editQuantity);
+    const normalizedUnit =
+      editServingUnit === CUSTOM_SERVING_UNIT
+        ? normalizeServingUnit(editCustomServingUnit)
+        : editServingUnit;
+
+    if (!Number.isFinite(parsedQuantity) || parsedQuantity <= 0 || !normalizedUnit) {
+      setMessage("Please provide valid quantity and serving unit before saving.");
+      return;
+    }
+
+    await container.updateFoodEntryUseCase.execute({
+      entry,
+      quantity: parsedQuantity,
+      servingUnit: normalizedUnit,
+    });
+    await refreshDashboard();
+    cancelEditing();
+    setMessage(`Updated ${entry.foodName}.`);
+  };
+
+  const handleDeleteEntry = async (entry: FoodEntry): Promise<void> => {
+    await container.deleteFoodEntryUseCase.execute(container.userId, entry.id);
+    await refreshDashboard();
+    if (editingEntryId === entry.id) {
+      cancelEditing();
+    }
+    setMessage(`Removed ${entry.foodName}.`);
+  };
+
+  const entriesByMeal = useMemo(() => {
+    const grouped: Record<MealType, FoodEntry[]> = {
+      breakfast: [],
+      lunch: [],
+      dinner: [],
+      snack: [],
+    };
+
+    for (const entry of entries) {
+      grouped[entry.mealType].push(entry);
+    }
+
+    return grouped;
+  }, [entries]);
 
   if (mealInAddMode) {
     return (
       <AddFoodToMealPage
         container={container}
+        dateKey={today}
         mealType={mealInAddMode}
         onBack={() => {
+          void refreshDashboard();
           setMealInAddMode(null);
         }}
-        onAdded={handleAddedToMeal}
+        onChanged={async (nextMessage?: string) => {
+          await handleMealDataChanged(nextMessage);
+        }}
       />
     );
   }
@@ -155,6 +238,7 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): JSX.Element =>
         <IonCardContent>
           {mealTypeOrder.map((mealType) => {
             const mealSummary = mealSummaries[mealType];
+            const mealEntries = entriesByMeal[mealType];
             return (
               <div key={mealType} className="meal-breakdown-row">
                 <div className="meal-breakdown-values">
@@ -176,33 +260,88 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): JSX.Element =>
                     Add Food
                   </IonButton>
                 </div>
+
+                <div className="meal-entry-list">
+                  {mealEntries.length === 0 ? (
+                    <IonText color="medium">
+                      <small>No items in {mealTypeLabels[mealType]} yet.</small>
+                    </IonText>
+                  ) : (
+                    mealEntries.map((entry) => {
+                      const isEditing = editingEntryId === entry.id;
+                      return (
+                        <div key={entry.id} className="meal-entry-row">
+                          <div>
+                            <strong>{entry.foodName}</strong>
+                            <p>
+                              {entry.nutritionSnapshot.calories} kcal • {entry.quantity} {entry.servingUnit} • {formatTime(entry.consumedAt)}
+                            </p>
+                          </div>
+
+                          {isEditing ? (
+                            <div className="meal-entry-edit-grid">
+                              <IonInput
+                                type="number"
+                                value={editQuantity}
+                                placeholder="Qty"
+                                onIonInput={(event) => {
+                                  setEditQuantity(event.detail.value ?? "");
+                                }}
+                              />
+                              <IonSelect
+                                value={editServingUnit}
+                                onIonChange={(event) => {
+                                  setEditServingUnit(event.detail.value ?? DEFAULT_SERVING_UNIT);
+                                }}
+                              >
+                                {predefinedServingUnits.map((unit) => (
+                                  <IonSelectOption key={unit.value} value={unit.value}>
+                                    {unit.label}
+                                  </IonSelectOption>
+                                ))}
+                                <IonSelectOption value={CUSTOM_SERVING_UNIT}>Custom</IonSelectOption>
+                              </IonSelect>
+                              {editServingUnit === CUSTOM_SERVING_UNIT ? (
+                                <IonInput
+                                  value={editCustomServingUnit}
+                                  placeholder="Custom unit"
+                                  onIonInput={(event) => {
+                                    setEditCustomServingUnit(event.detail.value ?? "");
+                                  }}
+                                />
+                              ) : null}
+                              <div className="meal-entry-actions">
+                                <IonButton size="small" onClick={() => void handleSaveEntry(entry)}>
+                                  Save
+                                </IonButton>
+                                <IonButton size="small" fill="clear" onClick={cancelEditing}>
+                                  Cancel
+                                </IonButton>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="meal-entry-actions">
+                              <IonButton size="small" fill="outline" onClick={() => startEditingEntry(entry)}>
+                                Edit
+                              </IonButton>
+                              <IonButton
+                                size="small"
+                                color="danger"
+                                fill="clear"
+                                onClick={() => void handleDeleteEntry(entry)}
+                              >
+                                Remove
+                              </IonButton>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
               </div>
             );
           })}
-        </IonCardContent>
-      </IonCard>
-
-      <IonCard>
-        <IonCardHeader>
-          <IonCardTitle>Logged Foods ({today})</IonCardTitle>
-        </IonCardHeader>
-        <IonCardContent>
-          {entries.length === 0 ? (
-            <p>No entries yet for today.</p>
-          ) : (
-            <IonList>
-              {entries.map((entry) => (
-                <IonItem key={entry.id}>
-                  <IonLabel>
-                    <h3>{entry.foodName}</h3>
-                    <p>
-                      {mealTypeLabels[entry.mealType]} • {entry.quantity} {entry.servingUnit} • {entry.nutritionSnapshot.calories} kcal • {formatTime(entry.consumedAt)}
-                    </p>
-                  </IonLabel>
-                </IonItem>
-              ))}
-            </IonList>
-          )}
         </IonCardContent>
       </IonCard>
 

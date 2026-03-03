@@ -52,3 +52,27 @@
 - Added mobile Ionic theme overrides in `src/theme.css` and applied centered app content container.
 - Updated unit tests for new `mealType` and nullable-goal behavior.
 - Re-validated with `npm run typecheck`, `npm test`, and `npm run build`.
+- Extended contracts and data flow for user/date-aware entry queries and daily summaries.
+- Added entry mutation support (`update`, `deleteById`) in repository and new use cases:
+  - `UpdateFoodEntryUseCase`
+  - `DeleteFoodEntryUseCase`
+- Added new Summary tab and `SummaryPage` with:
+  - previous/next day navigation
+  - swipe left/right day switching
+  - per-day summary rendering
+- Enhanced `DailySummaryCard` with macro bar charts (protein/carbs/fat).
+- Reworked Home meal sections into row-based item lists with inline edit/remove controls.
+- Upgraded `AddFoodToMealPage` to display and manage all foods in selected meal group for selected date (add/edit/remove).
+- Added profile persistence and save use case:
+  - `LocalUserProfileRepository`
+  - `SaveUserProfileUseCase`
+- Expanded Profile screen with age/height/current weight/target weight + current/target BMI + healthy-range visualization.
+- Added and updated tests:
+  - `tests/unit/bmi.spec.ts`
+  - `tests/unit/date.spec.ts`
+  - `tests/unit/localFoodEntryRepository.spec.ts`
+  - updated `tests/unit/dailySummary.spec.ts` for new service/repository contracts
+- Re-validated all checks after latest changes:
+  - `npm run typecheck`
+  - `npm test` (8 files, 24 tests)
+  - `npm run build`

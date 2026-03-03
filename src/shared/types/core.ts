@@ -43,3 +43,10 @@ export interface DailyConsumptionSummary {
   goalDelta: number | null;
   insights: string;
 }
+
+export interface UserProfile {
+  age: number | null;
+  heightCm: number | null;
+  currentWeightKg: number | null;
+  targetWeightKg: number | null;
+}

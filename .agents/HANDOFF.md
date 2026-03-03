@@ -2,42 +2,53 @@
 
 ## What was completed
 
-- Implemented home-screen top summary pie visualization in `DailySummaryCard`:
-  - consumed calories in center
-  - visual consumed/target progress via conic-gradient
-  - target + goal delta display with not-set support
-- Refactored food logging flow to meal-based dashboard:
-  - `FoodEntryPage` now shows meal sections (breakfast/lunch/dinner/snacks)
-  - each section displays totals for calories, protein, carbs, fat
-  - each section provides **Add Food** action
-- Added new page-like component `AddFoodToMealPage`:
-  - displays searchable list of available foods from local catalog
-  - allows selecting quantity + serving unit
-  - logs selected item into the chosen meal and returns to home
-- Extended food-entry domain and persistence:
-  - `FoodEntry` now includes `mealType`
-  - `createFoodEntry` and `LogFoodEntryUseCase` accept/validate meal type
-  - local repository migration fallback defaults older entries to `snack`
-- Updated target-calorie behavior to match profile state:
-  - `UserGoalRepository.getDailyCalorieGoal` now returns `number | null`
-  - summary model now includes `goalCalories` and nullable `goalDelta`
-  - insights now adapt when target is not set
-- Updated `ProfilePage`:
-  - displays current target calories (`Not set` when absent)
-  - saves target and reflects updates in home summary calculations
-- Added mobile-focused Ionic theming in `src/theme.css` and wired in `src/main.tsx`.
-- Wrapped app content with centered mobile container (`.app-content`) in `App.tsx`.
-- Validation completed successfully:
-  - `npm run typecheck` passed
-  - `npm test` passed (5 files, 14 tests)
-  - `npm run build` passed
+- Added **Summary tab** in `App.tsx` and new `SummaryPage.tsx` with:
+  - per-day summary rendering
+  - prev/next day buttons
+  - swipe-left/right day navigation
+- Upgraded daily summary visuals:
+  - existing calorie pie retained
+  - added three macro bars in pie area context (protein, carbs, fat)
+- Implemented user/date-aware data access:
+  - `FoodEntryRepository.listByDate(userId, date)`
+  - `DailySummaryService.forDate(userId, date)`
+  - updated callers in Home/Summary pages
+- Extended entry management capabilities:
+  - added repository methods `update` and `deleteById`
+  - added `UpdateFoodEntryUseCase` + `DeleteFoodEntryUseCase`
+- Reworked meal input UX in Home:
+  - breakfast/lunch/dinner/snack items shown as rows
+  - inline edit/remove with quantity + serving unit updates
+- Expanded `AddFoodToMealPage` to meet grouped-management requirement:
+  - now receives `dateKey`
+  - shows all items of selected meal group for that day
+  - allows add/edit/remove directly in that page
+  - new entries are recorded against selected date
+- Expanded Profile screen:
+  - age, height, current weight, target weight
+  - current BMI + target BMI
+  - healthy-range labels and BMI scale visualization
+  - added persistent profile storage (`LocalUserProfileRepository`) and save use case
+- Added/updated tests:
+  - updated `dailySummary.spec.ts` for new contracts
+  - added `bmi.spec.ts`
+  - added `date.spec.ts`
+  - added `localFoodEntryRepository.spec.ts`
+  - added `updateFoodEntryUseCase.spec.ts`
+  - added `localUserProfileRepository.spec.ts`
 
-## Current blocker
+## Validation status
+
+- `npm run typecheck` ✅
+- `npm test` ✅ (10 files, 27 tests)
+- `npm run build` ✅
+
+## Current blockers
 
 - None.
 
 ## Immediate next steps
 
-1. Run quick manual UI pass on an actual mobile viewport/device to tune card spacing and typography.
-2. Optionally add routing (`IonTabs` + routes) to make Add Food a real route (currently component-based flow).
-3. Add integration tests for meal totals + add-to-meal navigation flow.
+1. Add integration/component tests for meal-group UI interactions (home rows + add-food grouped manager).
+2. Do manual mobile QA on real devices for swipe gestures and dense row edit controls.
+3. Consider route-based tabs/pages as future refinement if navigation complexity grows.

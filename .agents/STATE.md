@@ -1,25 +1,30 @@
 # STATE
 
 - Phase: **Phase 1 MVP (web-first + Capacitor-ready structure)**
-- Status: **Home nutrition dashboard redesigned for meal-based flow with profile-linked calorie target and mobile-themed UI**
+- Status: **Core UX expansion complete: per-day summary tab, date-aware meal management, richer profile/BMI dashboard, and user/date-aware entry persistence**
 - Completed goals:
-  - Added mobile packaging npm commands for Android + iOS (`mobile:bundle`, `package:android`, `package:ios`).
-  - Added Capacitor platform dependencies for Android and iOS in dev toolchain.
-  - Reworked live update provider to fetch GitHub manifest, validate, prefetch/cache assets, and reload to latest app URL.
-  - Preserved bundled fallback behavior with rollback state retention.
-  - Documented deployment and OTA manifest format/workflow in README.
-  - Added two-screen bottom tab bar shell in app root (`Home`, `Profile`) and wired screen switching.
-  - Refactored home screen to show top calorie summary with pie-style progress and goal delta handling.
-  - Added meal breakdown sections (breakfast, lunch, dinner, snacks) with calories/protein/carbs/fat totals.
-  - Added per-meal add flow (`AddFoodToMealPage`) that lists available foods and logs selected items into the chosen meal.
-  - Extended `FoodEntry` domain with `mealType` and migrated repository reads with backward-compatible default (`snack`).
-  - Updated daily summary model to support nullable user goal (`goalCalories`, `goalDelta`) and profile-not-set messaging.
-  - Updated profile screen to display current target (or not-set state) and save new daily target values.
-  - Added Ionic mobile theme styling (`src/theme.css`) and responsive card/layout adjustments.
-  - Passed validation (`npm run typecheck`, `npm test`, `npm run build`).
+  - Added third bottom tab (`Summary`) with previous/next day controls and swipe left/right day navigation.
+  - Added reusable date utilities (`addDaysToDateKey`, `formatDateLabel`) and switched date-key handling to local date parts.
+  - Enhanced `DailySummaryCard` with macro bar visualizations for protein, carbs, and fat (in addition to calorie pie).
+  - Extended food-entry data flow to be user/date aware:
+    - `FoodEntryRepository.listByDate(userId, date)`
+    - `DailySummaryService.forDate(userId, date)`
+    - repository supports `update` and `deleteById`
+  - Added food-entry edit/remove use cases (`UpdateFoodEntryUseCase`, `DeleteFoodEntryUseCase`).
+  - Reworked Home meal sections into row-based item lists with inline edit/remove controls.
+  - Expanded Add Food screen to also show/manage all foods in the selected meal group for the selected day (add/edit/remove in one place).
+  - Added profile persistence + use case for personal metrics (`LocalUserProfileRepository`, `SaveUserProfileUseCase`).
+  - Expanded Profile screen with age, height, current weight, target weight, current BMI, target BMI, healthy-range indicators, and BMI visualization scale.
+  - Updated dependency container/bootstrap to wire all new repositories/use cases.
+  - Added unit tests for BMI domain helpers, date utilities, and local food-entry repository behavior.
+  - Added unit tests for profile repository normalization and update-entry use case behavior.
+  - Full validation passed:
+    - `npm run typecheck`
+    - `npm test` (10 files, 27 tests)
+    - `npm run build`
 - Current blockers:
   - None.
 - Next actions:
-  1. Add runtime smoke test on physical Android/iOS devices for new meal-add UX and summary rendering.
-  2. Add signed manifest verification (real cryptographic signature check, not prefix validation).
-  3. Automate publishing manifest + assets to GitHub Pages/Release artifacts in CI.
+  1. Add integration/component tests for Home/AddFood meal-management UI flows (edit/remove/add in grouped views).
+  2. Run manual mobile viewport QA on real Android/iOS devices for swipe summary and dense row layouts.
+  3. Continue OTA hardening (real signature verification + CI publish automation).

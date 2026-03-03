@@ -24,13 +24,15 @@ import {
   normalizeServingUnit,
   predefinedServingUnits,
 } from "@/features/food-entry/domain/servingUnits";
-import type { MealType } from "@/shared/types/core";
+import type { FoodEntry, MealType } from "@/shared/types/core";
+import { formatDateLabel } from "@/shared/utils/date";
 
 interface AddFoodToMealPageProps {
   container: AppContainer;
+  dateKey: string;
   mealType: MealType;
   onBack: () => void;
-  onAdded: (message: string) => Promise<void>;
+  onChanged: (message?: string) => Promise<void>;
 }
 
 const parsePositiveNumber = (value: string): number | null => {
@@ -44,20 +46,39 @@ const parsePositiveNumber = (value: string): number | null => {
 
 export const AddFoodToMealPage = ({
   container,
+  dateKey,
   mealType,
   onBack,
-  onAdded,
+  onChanged,
 }: AddFoodToMealPageProps): JSX.Element => {
   const [query, setQuery] = useState("");
   const [availableFoods, setAvailableFoods] = useState<string[]>([]);
+  const [mealEntries, setMealEntries] = useState<FoodEntry[]>([]);
   const [quantity, setQuantity] = useState("1");
   const [servingUnit, setServingUnit] = useState(DEFAULT_SERVING_UNIT);
   const [customServingUnit, setCustomServingUnit] = useState("");
+  const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
+  const [editQuantity, setEditQuantity] = useState("");
+  const [editServingUnit, setEditServingUnit] = useState(DEFAULT_SERVING_UNIT);
+  const [editCustomServingUnit, setEditCustomServingUnit] = useState("");
   const [message, setMessage] = useState("");
   const [isSavingFood, setIsSavingFood] = useState(false);
   const [savingFoodName, setSavingFoodName] = useState<string | null>(null);
 
   const mealLabel = useMemo(() => mealTypeLabels[mealType], [mealType]);
+  const dateLabel = useMemo(() => formatDateLabel(dateKey), [dateKey]);
+
+  const loadMealEntries = useMemo(
+    () => async (): Promise<void> => {
+      const entries = await container.listDailyEntriesUseCase.execute(container.userId, dateKey);
+      setMealEntries(entries.filter((entry) => entry.mealType === mealType));
+    },
+    [container, dateKey, mealType],
+  );
+
+  useEffect(() => {
+    void loadMealEntries();
+  }, [loadMealEntries]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -73,6 +94,11 @@ export const AddFoodToMealPage = ({
       window.clearTimeout(timer);
     };
   }, [container, query]);
+
+  const resolveConsumedAt = (): string => {
+    const date = new Date(`${dateKey}T12:00:00`);
+    return date.toISOString();
+  };
 
   const handleAddFood = async (foodName: string): Promise<void> => {
     if (isSavingFood) {
@@ -99,14 +125,69 @@ export const AddFoodToMealPage = ({
         mealType,
         quantity: parsedQuantity,
         servingUnit: resolvedServingUnit,
+        consumedAt: resolveConsumedAt(),
       });
 
-      await onAdded(`Added ${foodName} to ${mealLabel}.`);
+      await loadMealEntries();
+      await onChanged(`Added ${foodName} to ${mealLabel}.`);
     } catch {
       setMessage(`Unable to add ${foodName}. Please try again.`);
     } finally {
       setIsSavingFood(false);
       setSavingFoodName(null);
+    }
+  };
+
+  const startEditingEntry = (entry: FoodEntry): void => {
+    setEditingEntryId(entry.id);
+    setEditQuantity(String(entry.quantity));
+    setEditServingUnit(
+      predefinedServingUnits.some((unit) => unit.value === entry.servingUnit)
+        ? entry.servingUnit
+        : CUSTOM_SERVING_UNIT,
+    );
+    setEditCustomServingUnit(
+      predefinedServingUnits.some((unit) => unit.value === entry.servingUnit)
+        ? ""
+        : entry.servingUnit,
+    );
+  };
+
+  const cancelEditing = (): void => {
+    setEditingEntryId(null);
+    setEditQuantity("");
+    setEditServingUnit(DEFAULT_SERVING_UNIT);
+    setEditCustomServingUnit("");
+  };
+
+  const handleSaveEntry = async (entry: FoodEntry): Promise<void> => {
+    const parsedQuantity = Number(editQuantity);
+    const resolvedServingUnit =
+      editServingUnit === CUSTOM_SERVING_UNIT
+        ? normalizeServingUnit(editCustomServingUnit)
+        : editServingUnit;
+
+    if (!Number.isFinite(parsedQuantity) || parsedQuantity <= 0 || !resolvedServingUnit) {
+      setMessage("Please provide valid quantity and serving unit.");
+      return;
+    }
+
+    await container.updateFoodEntryUseCase.execute({
+      entry,
+      quantity: parsedQuantity,
+      servingUnit: resolvedServingUnit,
+    });
+    await loadMealEntries();
+    await onChanged(`Updated ${entry.foodName}.`);
+    cancelEditing();
+  };
+
+  const handleDeleteEntry = async (entry: FoodEntry): Promise<void> => {
+    await container.deleteFoodEntryUseCase.execute(container.userId, entry.id);
+    await loadMealEntries();
+    await onChanged(`Removed ${entry.foodName}.`);
+    if (editingEntryId === entry.id) {
+      cancelEditing();
     }
   };
 
@@ -118,11 +199,96 @@ export const AddFoodToMealPage = ({
             <IonIcon icon={arrowBackOutline} slot="start" />
             Back
           </IonButton>
-          <IonCardTitle>Add Food to {mealLabel}</IonCardTitle>
+          <IonCardTitle>
+            {mealLabel} • {dateLabel}
+          </IonCardTitle>
         </div>
       </IonCardHeader>
 
       <IonCardContent>
+        <IonText color="medium">
+          <p>Manage foods in {mealLabel}: add new, edit quantity/unit, or remove items.</p>
+        </IonText>
+
+        <div className="meal-entry-list">
+          {mealEntries.length === 0 ? (
+            <IonText color="medium">
+              <small>No items in this meal yet.</small>
+            </IonText>
+          ) : (
+            mealEntries.map((entry) => {
+              const isEditing = editingEntryId === entry.id;
+              return (
+                <div key={entry.id} className="meal-entry-row">
+                  <div>
+                    <strong>{entry.foodName}</strong>
+                    <p>
+                      {entry.nutritionSnapshot.calories} kcal • {entry.quantity} {entry.servingUnit}
+                    </p>
+                  </div>
+
+                  {isEditing ? (
+                    <div className="meal-entry-edit-grid">
+                      <IonInput
+                        type="number"
+                        value={editQuantity}
+                        placeholder="Qty"
+                        onIonInput={(event) => {
+                          setEditQuantity(event.detail.value ?? "");
+                        }}
+                      />
+                      <IonSelect
+                        value={editServingUnit}
+                        onIonChange={(event) => {
+                          setEditServingUnit(event.detail.value ?? DEFAULT_SERVING_UNIT);
+                        }}
+                      >
+                        {predefinedServingUnits.map((unit) => (
+                          <IonSelectOption key={unit.value} value={unit.value}>
+                            {unit.label}
+                          </IonSelectOption>
+                        ))}
+                        <IonSelectOption value={CUSTOM_SERVING_UNIT}>Custom</IonSelectOption>
+                      </IonSelect>
+                      {editServingUnit === CUSTOM_SERVING_UNIT ? (
+                        <IonInput
+                          value={editCustomServingUnit}
+                          placeholder="Custom unit"
+                          onIonInput={(event) => {
+                            setEditCustomServingUnit(event.detail.value ?? "");
+                          }}
+                        />
+                      ) : null}
+                      <div className="meal-entry-actions">
+                        <IonButton size="small" onClick={() => void handleSaveEntry(entry)}>
+                          Save
+                        </IonButton>
+                        <IonButton size="small" fill="clear" onClick={cancelEditing}>
+                          Cancel
+                        </IonButton>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="meal-entry-actions">
+                      <IonButton size="small" fill="outline" onClick={() => startEditingEntry(entry)}>
+                        Edit
+                      </IonButton>
+                      <IonButton
+                        size="small"
+                        color="danger"
+                        fill="clear"
+                        onClick={() => void handleDeleteEntry(entry)}
+                      >
+                        Remove
+                      </IonButton>
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
+
         <IonItem>
           <IonLabel position="stacked">Search available foods</IonLabel>
           <IonInput

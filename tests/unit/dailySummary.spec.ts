@@ -13,8 +13,24 @@ class StubFoodEntryRepository implements FoodEntryRepository {
     this.entries.push(entry);
   }
 
-  async listByDate(_date: string): Promise<FoodEntry[]> {
-    return this.entries;
+  async update(entry: FoodEntry): Promise<void> {
+    const index = this.entries.findIndex((candidate) => candidate.id === entry.id);
+    if (index >= 0) {
+      this.entries[index] = entry;
+    }
+  }
+
+  async deleteById(userId: string, entryId: string): Promise<void> {
+    const index = this.entries.findIndex(
+      (candidate) => candidate.id === entryId && candidate.userId === userId,
+    );
+    if (index >= 0) {
+      this.entries.splice(index, 1);
+    }
+  }
+
+  async listByDate(userId: string, _date: string): Promise<FoodEntry[]> {
+    return this.entries.filter((entry) => entry.userId === userId);
   }
 }
 
@@ -70,10 +86,9 @@ describe("LocalDailySummaryService", () => {
     const service = new LocalDailySummaryService(
       new StubFoodEntryRepository(entries),
       new StubUserGoalRepository(2000),
-      "u1",
     );
 
-    const summary = await service.forDate("2026-03-02");
+    const summary = await service.forDate("u1", "2026-03-02");
 
     expect(summary.totalCalories).toBe(261);
     expect(summary.goalCalories).toBe(2000);
@@ -104,10 +119,9 @@ describe("LocalDailySummaryService", () => {
     const service = new LocalDailySummaryService(
       new StubFoodEntryRepository(entries),
       new StubUserGoalRepository(null),
-      "u1",
     );
 
-    const summary = await service.forDate("2026-03-02");
+    const summary = await service.forDate("u1", "2026-03-02");
 
     expect(summary.goalCalories).toBeNull();
     expect(summary.goalDelta).toBeNull();
