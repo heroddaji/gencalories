@@ -4,6 +4,7 @@ import type {
   LiveUpdateState,
   StorageProvider,
 } from "@/app/di/contracts";
+import { versionInfo } from "@/shared/versionInfo";
 
 const STORAGE_KEY = "live_update_state_v1";
 const DEFAULT_MANIFEST_URL = "https://raw.githubusercontent.com/heroddaji/gencalories/main/live-update/manifest.json";
@@ -17,8 +18,6 @@ interface RemoteManifest {
   assets?: string[];
 }
 
-const bundleVersion = (): string => import.meta.env.VITE_APP_BUNDLE_VERSION ?? "bundled-1.0.0";
-
 const isValidManifest = (value: Partial<RemoteManifest>): value is RemoteManifest => {
   return Boolean(value.version && value.hash && value.signature && value.appUrl);
 };
@@ -28,7 +27,7 @@ const manifestUrl = (): string => {
 };
 
 const bundledState = (rollbackReason?: string): LiveUpdateState => ({
-  currentBundleVersion: bundleVersion(),
+  currentBundleVersion: versionInfo.bundleVersion,
   manifestHash: "bundled-hash",
   manifestSignature: "bundled-signature",
   appliedAt: new Date().toISOString(),

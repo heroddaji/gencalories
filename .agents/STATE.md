@@ -24,8 +24,9 @@
     - `npm run build`
   - Added Capacitor mobile storage provider, container, and runtime detection to back all repositories/services with SQLite on native platforms while keeping the web container unchanged.
 - Current blockers:
-  - None.
+- None.
 - Next actions:
-  1. Add integration/component tests for Home/AddFood meal-management UI flows (edit/remove/add in grouped views).
-  2. Run manual mobile viewport QA on real Android/iOS devices for swipe summary and dense row layouts.
-  3. Continue OTA hardening (real signature verification + CI publish automation).
+-  1. Monitor chunk size warning after adding heavier live-update metadata to ensure web build stays performant.
+-  2. Add integration/component tests for Home/AddFood meal-management UI flows (edit/remove/add in grouped views).
+-  3. Run manual mobile viewport QA on real Android/iOS devices for swipe summary and dense row layouts.
+-  4. Continue OTA hardening (real signature verification + CI publish automation).

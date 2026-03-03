@@ -28,6 +28,7 @@ import type {
   NutritionSnapshot,
 } from "@/shared/types/core";
 import { toDateKey } from "@/shared/utils/date";
+import { versionInfo } from "@/shared/versionInfo";
 
 interface FoodEntryPageProps {
   container: AppContainer;
@@ -354,6 +355,8 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): JSX.Element =>
             <p>
               Bundle <strong>{liveUpdateState.currentBundleVersion}</strong> • applied {new Date(liveUpdateState.appliedAt).toLocaleString()}
               {liveUpdateState.rollbackReason ? ` • rollback: ${liveUpdateState.rollbackReason}` : ""}
+              <br />
+              App {versionInfo.appVersion} • Build {versionInfo.bundleVersion}
             </p>
           ) : (
             <p>Checking update state…</p>
