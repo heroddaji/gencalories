@@ -38,3 +38,6 @@
 - Added Android/iOS packaging scripts and native Capacitor platform dependencies.
 - Implemented GitHub-manifest OTA flow with manifest fetch/validation, asset cache warmup, and reload to latest app URL.
 - Documented OTA manifest schema and mobile packaging commands in README.
+- Added Home/Profile bottom tab bar screen shell in `App.tsx`.
+- Moved daily goal editing into new `ProfilePage` screen.
+- Simplified `FoodEntryPage` into Home content without its own page-level header wrapper.

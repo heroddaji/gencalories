@@ -7,7 +7,7 @@
 - Unit tests: **PASS** (`npm test`)
   - 5 test files passed
   - 13 tests passed
-- Build: **NOT RUN** in this run
+- Build: **PASS** (`npm run build`)
 - OTA/provider tests: **NOT ADDED YET**
 
 ## Present test files
@@ -24,3 +24,4 @@
 - Local catalog expanded to additional foods with per-food serving-size mappings.
 - Live update provider now targets GitHub manifest URL and can prefetch/cache listed assets before reload.
 - Baseline manifest file now exists at `live-update/manifest.json` for immediate OTA endpoint availability.
+- UI now has two screens with bottom tab bar navigation: Home (food logging/dashboard) and Profile (daily-goal management).

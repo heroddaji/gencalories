@@ -4,17 +4,12 @@ import {
   IonCardContent,
   IonCardHeader,
   IonCardTitle,
-  IonContent,
-  IonHeader,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
-  IonPage,
   IonSelect,
   IonSelectOption,
-  IonTitle,
-  IonToolbar,
 } from "@ionic/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { AppContainer } from "@/app/di/container";
@@ -64,7 +59,6 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): JSX.Element =>
   const [quantity, setQuantity] = useState("1");
   const [servingUnit, setServingUnit] = useState(DEFAULT_SERVING_UNIT);
   const [customServingUnit, setCustomServingUnit] = useState("");
-  const [dailyGoal, setDailyGoal] = useState("2000");
   const [suggestions, setSuggestions] = useState<SuggestionItemView[]>([]);
   const [entries, setEntries] = useState<FoodEntry[]>([]);
   const [summary, setSummary] = useState<DailyConsumptionSummary | null>(null);
@@ -73,15 +67,13 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): JSX.Element =>
   const [isSaving, setIsSaving] = useState(false);
 
   const refreshDashboard = useCallback(async () => {
-    const [nextEntries, nextSummary, goal] = await Promise.all([
+    const [nextEntries, nextSummary] = await Promise.all([
       container.listDailyEntriesUseCase.execute(today),
       container.dailySummaryService.forDate(today),
-      container.userGoalRepository.getDailyCalorieGoal(container.userId),
     ]);
 
     setEntries(nextEntries);
     setSummary(nextSummary);
-    setDailyGoal(String(goal));
   }, [container, today]);
 
   useEffect(() => {
@@ -184,22 +176,6 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): JSX.Element =>
     }
   };
 
-  const handleSetGoal = async (): Promise<void> => {
-    const parsedGoal = parsePositiveNumber(dailyGoal);
-    if (!parsedGoal) {
-      setMessage("Daily goal must be a positive number.");
-      return;
-    }
-
-    try {
-      await container.setDailyGoalUseCase.execute(container.userId, parsedGoal);
-      await refreshDashboard();
-      setMessage(`Daily goal updated to ${Math.round(parsedGoal)} kcal.`);
-    } catch {
-      setMessage("Unable to update daily goal.");
-    }
-  };
-
   const handleClearHistory = async (): Promise<void> => {
     await container.clearFoodHistoryUseCase.execute();
     setSuggestions([]);
@@ -214,153 +190,124 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): JSX.Element =>
   };
 
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>GenCalories</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
-      <IonContent className="ion-padding">
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Add Food</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <IonItem>
-              <IonLabel position="stacked">Food</IonLabel>
-              <IonInput
-                value={foodName}
-                placeholder="e.g. chicken breast"
-                onIonInput={(event) => {
-                  setFoodName(event.detail.value ?? "");
-                }}
-              />
-            </IonItem>
-
-            <IonItem>
-              <IonLabel position="stacked">Quantity</IonLabel>
-              <IonInput
-                type="number"
-                value={quantity}
-                onIonInput={(event) => {
-                  setQuantity(event.detail.value ?? "");
-                }}
-              />
-            </IonItem>
-
-            <IonItem>
-              <IonLabel position="stacked">Serving Type</IonLabel>
-              <IonSelect
-                value={servingUnit}
-                onIonChange={(event) => {
-                  setServingUnit(event.detail.value ?? DEFAULT_SERVING_UNIT);
-                }}
-              >
-                {predefinedServingUnits.map((unit) => (
-                  <IonSelectOption key={unit.value} value={unit.value}>
-                    {unit.label}
-                  </IonSelectOption>
-                ))}
-                <IonSelectOption value={CUSTOM_SERVING_UNIT}>Custom</IonSelectOption>
-              </IonSelect>
-            </IonItem>
-            {servingUnit === CUSTOM_SERVING_UNIT ? (
-              <IonItem>
-                <IonLabel position="stacked">Custom Serving Unit</IonLabel>
-                <IonInput
-                  value={customServingUnit}
-                  placeholder="e.g. scoop"
-                  onIonInput={(event) => {
-                    setCustomServingUnit(event.detail.value ?? "");
-                  }}
-                />
-              </IonItem>
-            ) : null}
-
-            <IonButton expand="block" onClick={() => void handleLogFood()} disabled={isSaving}>
-              {isSaving ? "Saving..." : "Log Food"}
-            </IonButton>
-
-            <IonButton expand="block" fill="clear" color="medium" onClick={() => void handleClearHistory()}>
-              Clear All History
-            </IonButton>
-
-            <SuggestionList
-              suggestions={suggestions}
-              onSelect={handleSelectSuggestion}
-              onDelete={(normalizedName) => {
-                void handleDeleteHistoryItem(normalizedName);
+    <>
+      <IonCard>
+        <IonCardHeader>
+          <IonCardTitle>Add Food</IonCardTitle>
+        </IonCardHeader>
+        <IonCardContent>
+          <IonItem>
+            <IonLabel position="stacked">Food</IonLabel>
+            <IonInput
+              value={foodName}
+              placeholder="e.g. chicken breast"
+              onIonInput={(event) => {
+                setFoodName(event.detail.value ?? "");
               }}
             />
-          </IonCardContent>
-        </IonCard>
+          </IonItem>
 
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Daily Goal</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
+          <IonItem>
+            <IonLabel position="stacked">Quantity</IonLabel>
+            <IonInput
+              type="number"
+              value={quantity}
+              onIonInput={(event) => {
+                setQuantity(event.detail.value ?? "");
+              }}
+            />
+          </IonItem>
+
+          <IonItem>
+            <IonLabel position="stacked">Serving Type</IonLabel>
+            <IonSelect
+              value={servingUnit}
+              onIonChange={(event) => {
+                setServingUnit(event.detail.value ?? DEFAULT_SERVING_UNIT);
+              }}
+            >
+              {predefinedServingUnits.map((unit) => (
+                <IonSelectOption key={unit.value} value={unit.value}>
+                  {unit.label}
+                </IonSelectOption>
+              ))}
+              <IonSelectOption value={CUSTOM_SERVING_UNIT}>Custom</IonSelectOption>
+            </IonSelect>
+          </IonItem>
+          {servingUnit === CUSTOM_SERVING_UNIT ? (
             <IonItem>
-              <IonLabel position="stacked">Calorie Goal</IonLabel>
+              <IonLabel position="stacked">Custom Serving Unit</IonLabel>
               <IonInput
-                type="number"
-                value={dailyGoal}
+                value={customServingUnit}
+                placeholder="e.g. scoop"
                 onIonInput={(event) => {
-                  setDailyGoal(event.detail.value ?? "");
+                  setCustomServingUnit(event.detail.value ?? "");
                 }}
               />
             </IonItem>
-            <IonButton expand="block" onClick={() => void handleSetGoal()}>
-              Save Goal
-            </IonButton>
-          </IonCardContent>
-        </IonCard>
+          ) : null}
 
-        <DailySummaryCard summary={summary} />
+          <IonButton expand="block" onClick={() => void handleLogFood()} disabled={isSaving}>
+            {isSaving ? "Saving..." : "Log Food"}
+          </IonButton>
 
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Logged Foods ({today})</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            {entries.length === 0 ? (
-              <p>No entries yet for today.</p>
-            ) : (
-              <IonList>
-                {entries.map((entry) => (
-                  <IonItem key={entry.id}>
-                    <IonLabel>
-                      <h3>{entry.foodName}</h3>
-                      <p>
-                        {entry.quantity} {entry.servingUnit} • {entry.nutritionSnapshot.calories} kcal • {formatTime(entry.consumedAt)}
-                      </p>
-                    </IonLabel>
-                  </IonItem>
-                ))}
-              </IonList>
-            )}
-          </IonCardContent>
-        </IonCard>
+          <IonButton expand="block" fill="clear" color="medium" onClick={() => void handleClearHistory()}>
+            Clear All History
+          </IonButton>
 
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Live Update State</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            {liveUpdateState ? (
-              <p>
-                Bundle <strong>{liveUpdateState.currentBundleVersion}</strong> • applied {new Date(liveUpdateState.appliedAt).toLocaleString()}
-                {liveUpdateState.rollbackReason ? ` • rollback: ${liveUpdateState.rollbackReason}` : ""}
-              </p>
-            ) : (
-              <p>Checking update state…</p>
-            )}
-          </IonCardContent>
-        </IonCard>
+          <SuggestionList
+            suggestions={suggestions}
+            onSelect={handleSelectSuggestion}
+            onDelete={(normalizedName) => {
+              void handleDeleteHistoryItem(normalizedName);
+            }}
+          />
+        </IonCardContent>
+      </IonCard>
 
-        {message ? <p>{message}</p> : null}
-      </IonContent>
-    </IonPage>
+      <DailySummaryCard summary={summary} />
+
+      <IonCard>
+        <IonCardHeader>
+          <IonCardTitle>Logged Foods ({today})</IonCardTitle>
+        </IonCardHeader>
+        <IonCardContent>
+          {entries.length === 0 ? (
+            <p>No entries yet for today.</p>
+          ) : (
+            <IonList>
+              {entries.map((entry) => (
+                <IonItem key={entry.id}>
+                  <IonLabel>
+                    <h3>{entry.foodName}</h3>
+                    <p>
+                      {entry.quantity} {entry.servingUnit} • {entry.nutritionSnapshot.calories} kcal • {formatTime(entry.consumedAt)}
+                    </p>
+                  </IonLabel>
+                </IonItem>
+              ))}
+            </IonList>
+          )}
+        </IonCardContent>
+      </IonCard>
+
+      <IonCard>
+        <IonCardHeader>
+          <IonCardTitle>Live Update State</IonCardTitle>
+        </IonCardHeader>
+        <IonCardContent>
+          {liveUpdateState ? (
+            <p>
+              Bundle <strong>{liveUpdateState.currentBundleVersion}</strong> • applied {new Date(liveUpdateState.appliedAt).toLocaleString()}
+              {liveUpdateState.rollbackReason ? ` • rollback: ${liveUpdateState.rollbackReason}` : ""}
+            </p>
+          ) : (
+            <p>Checking update state…</p>
+          )}
+        </IonCardContent>
+      </IonCard>
+
+      {message ? <p>{message}</p> : null}
+    </>
   );
 };
