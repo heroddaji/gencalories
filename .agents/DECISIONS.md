@@ -16,3 +16,9 @@
 - **Context:** App must support default bundled fallback and rollback metadata.
 - **Decision:** Implement `WebLiveUpdateProvider` with `getState/checkForUpdate/applyUpdate/rollback` and tracked metadata (bundle version/hash/signature/appliedAt/rollbackReason).
 - **Consequences:** Safety contract exists now; production signature/hash validation and remote delivery pipeline still needed.
+
+## ADR-004: Mobile bootstrap must resolve mobile-scoped adapters
+
+- **Context:** `createMobileAppContainer` had started using `MobileStorageProvider` but still instantiated `WebSyncProvider` and `WebLiveUpdateProvider`, which blurred platform boundaries and made the mobile path look partially web-wired.
+- **Decision:** Add `MobileSyncProvider` and `MobileLiveUpdateProvider`, and update the mobile DI container to resolve dependencies only from `src/platform/mobile/*`. Implement the mobile live-update adapter with `@capawesome/capacitor-live-update` while preserving the shared `LiveUpdateProvider` contract shape used by the UI.
+- **Consequences:** Clearer dependency inversion and platform ownership in bootstrap code; native OTA behavior is now explicit. Real-device verification is still required because the native adapter has no dedicated automated tests yet.

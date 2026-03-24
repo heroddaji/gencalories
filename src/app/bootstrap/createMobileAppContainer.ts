@@ -20,13 +20,13 @@ import { SaveUserProfileUseCase } from "@/features/user-profile-goals/applicatio
 import { SetDailyGoalUseCase } from "@/features/user-profile-goals/application/SetDailyGoalUseCase";
 import { LocalUserProfileRepository } from "@/features/user-profile-goals/infrastructure/LocalUserProfileRepository";
 import { LocalUserGoalRepository } from "@/features/user-profile-goals/infrastructure/LocalUserGoalRepository";
-import { WebLiveUpdateProvider } from "@/platform/web/WebLiveUpdateProvider";
-import { WebSyncProvider } from "@/platform/web/WebSyncProvider";
+import { MobileLiveUpdateProvider } from "@/platform/mobile/MobileLiveUpdateProvider";
 import { MobileStorageProvider } from "@/platform/mobile/MobileStorageProvider";
+import { MobileSyncProvider } from "@/platform/mobile/MobileSyncProvider";
 
 export const createMobileAppContainer = (userId = "local-user"): AppContainer => {
   const storageProvider = new MobileStorageProvider();
-  const syncProvider = new WebSyncProvider();
+  const syncProvider = new MobileSyncProvider();
   const nutritionProvider = new LocalNutritionProvider();
   const foodSearchProvider = new LocalFoodSearchProvider();
   const foodHistoryRepository = new LocalFoodHistoryRepository(storageProvider);
@@ -34,7 +34,7 @@ export const createMobileAppContainer = (userId = "local-user"): AppContainer =>
   const foodEntryRepository = new LocalFoodEntryRepository(storageProvider);
   const userGoalRepository = new LocalUserGoalRepository(storageProvider);
   const userProfileRepository = new LocalUserProfileRepository(storageProvider);
-  const liveUpdateProvider = new WebLiveUpdateProvider(storageProvider);
+  const liveUpdateProvider = new MobileLiveUpdateProvider(storageProvider);
 
   const logFoodEntryUseCase = new LogFoodEntryUseCase(
     nutritionProvider,

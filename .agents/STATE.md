@@ -1,21 +1,25 @@
 # STATE
 
 - Phase: **Phase 1 MVP (web-first + Capacitor-ready structure)**
-- Status: **Expanded nutrition catalog with FoodData Central values; tests passing**
+- Status: **Mobile bootstrap now uses native-named platform adapters; tests passing**
 - Completed goals (latest at top):
+  - Replaced web-named provider usage inside the mobile DI container with `MobileSyncProvider` and `MobileLiveUpdateProvider`, preserving platform boundaries in bootstrap wiring.
+  - Implemented `MobileLiveUpdateProvider` on top of the Capawesome Capacitor live-update plugin, with persisted bundle metadata aligned to the app `LiveUpdateProvider` contract.
   - Added a root `vite.config.ts` with the `@` → `src` alias so Vite can resolve `@/app/App` and `@/theme.css` from `src/main.tsx`; `npm run build` passes again.
   - Expanded `defaultNutritionCatalog` with a broad FoodData Central–based set (fruits, vegetables, grains, proteins, legumes, dairy/alternatives, fats/condiments, nuts/seeds, sweets, beverages) to improve lookup and suggestions.
   - Added prior UX and data flow enhancements: Summary tab with day navigation, macro bars, user/date-aware repositories, edit/remove use cases, profile metrics, DI wiring, and mobile storage provider.
-  - Validation (latest): `npm test -- --silent --reporter default` ✅; previous runs: `npm run typecheck`, `npm run build`, `npm run mobile:bundle` ✅.
+  - Validation (latest): `npm run typecheck` ✅ and `npm test -- --silent --reporter default` ✅.
 - Current blockers:
 - None.
 - Latest run notes:
+  - `createMobileAppContainer` no longer imports `WebSyncProvider` or `WebLiveUpdateProvider`; mobile bootstrap now resolves everything from `src/platform/mobile/*`.
+  - The native live-update adapter now uses `@capawesome/capacitor-live-update` to fetch/download/set/reload bundles while persisting contract-compatible state through the mobile storage provider.
+  - `MobileSyncProvider` is currently a mobile-scoped no-op adapter so the container has a clean platform boundary without changing higher-level app flow.
   - Root cause of dependency scan failure was missing Vite alias configuration even though TypeScript `paths` already mapped `@/*` to `src/*`.
   - Added `vite.config.ts` with React plugin + alias; verified with `npm run build` ✅. Build still reports a large chunk warning for `index-*.js`.
   - Nutrition catalog now contains many more FDC-aligned foods with per-100g macros and common unit gram mappings to improve resolution and suggestions.
-  - `npm test -- --silent --reporter default` passed after catalog expansion.
+  - `npm test -- --silent --reporter default` passed after the mobile adapter cleanup.
 -  1. Investigate/code-split the large production chunk reported by Vite build output.
 -  2. Add integration/component tests for Home/AddFood meal-management UI flows (edit/remove/add in grouped views).
--  3. Run manual mobile viewport QA on real Android/iOS devices for swipe summary and dense row layouts.
--  4. Continue OTA hardening (real signature verification + CI publish automation).
+-  3. Run manual mobile OTA smoke testing on Android/iOS to validate the new native live-update adapter against real bundles.
 -  4. Continue OTA hardening (real signature verification + CI publish automation).

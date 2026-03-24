@@ -76,3 +76,16 @@
   - `npm run typecheck`
   - `npm test` (8 files, 24 tests)
   - `npm run build`
+
+## 2026-03-24
+
+- Cleaned up mobile DI wiring so `createMobileAppContainer` no longer depends on web-named platform adapters.
+- Added `src/platform/mobile/MobileSyncProvider.ts` as a mobile-scoped sync adapter.
+- Added `src/platform/mobile/MobileLiveUpdateProvider.ts` using `@capawesome/capacitor-live-update` for native bundle lookup, download, activation, and reset while preserving the app’s shared `LiveUpdateProvider` contract.
+- Updated mobile bootstrap to use:
+  - `MobileStorageProvider`
+  - `MobileSyncProvider`
+  - `MobileLiveUpdateProvider`
+- Re-validated with:
+  - `npm run typecheck`
+  - `npm test -- --silent --reporter default` (10 files, 27 tests)

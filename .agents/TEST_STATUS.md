@@ -3,8 +3,8 @@
 ## Last run summary
 
 - Date: **2026-03-24**
-- Typecheck: **PASS** (`npm run typecheck`) — previous run
-- Unit tests: **PASS** (`npm test -- --silent --reporter default`) — post-catalog expansion
+- Typecheck: **PASS** (`npm run typecheck`) — latest
+- Unit tests: **PASS** (`npm test -- --silent --reporter default`) — latest
   - 10 test files passed
   - 27 tests passed
 - Build: **PASS** (`npm run build`) — latest; fixed Vite alias resolution by adding root `vite.config.ts`
@@ -13,6 +13,9 @@
 
 - Latest change quick check
 
+- Added `MobileLiveUpdateProvider` and `MobileSyncProvider` so `createMobileAppContainer` no longer imports web-specific provider classes.
+- `MobileLiveUpdateProvider` now uses the Capawesome native plugin for bundle checks/download/apply/reset and persists contract-shaped state through mobile storage.
+- No automated provider-specific tests yet for the native live-update adapter; current safety net is typecheck plus existing unit suite.
 - Added root `vite.config.ts` to align Vite with TypeScript path aliases (`@` → `src`), which fixed dependency scan/build resolution for `src/main.tsx` imports.
 - `npm run build` now completes successfully again; Vite still emits a large chunk warning for the main bundle.
 - Nutrition catalog massively expanded with FoodData Central per-100g values and common gram-per-unit mappings; search/suggestions should surface more items. No new automated tests added for catalog size; unit suite still green.
@@ -32,6 +35,7 @@
 
 ## Notes
 
+- Mobile bootstrap wiring now matches the intended platform separation more closely, but real-device OTA verification is still outstanding.
 - Food entries are now queried by **user + date**, and summary service now resolves by **user + date**.
 - Repository now supports update/delete operations; Home and Add Food flows support inline edit/remove of meal rows.
 - Added Summary tab with per-day browsing via buttons and swipe gestures.
