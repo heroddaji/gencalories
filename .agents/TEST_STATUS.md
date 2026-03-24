@@ -2,18 +2,20 @@
 
 ## Last run summary
 
-- Date: **2026-03-03**
+- Date: **2026-03-24**
 - Typecheck: **PASS** (`npm run typecheck`) — previous run
 - Unit tests: **PASS** (`npm test -- --silent --reporter default`) — post-catalog expansion
   - 10 test files passed
   - 27 tests passed
-- Build: **PASS** (`npm run build`) — previous run
+- Build: **PASS** (`npm run build`) — latest; fixed Vite alias resolution by adding root `vite.config.ts`
 - Mobile bundle sync: **PASS** (`npm run mobile:bundle` → `npm run cap:sync`) — previous run
 - OTA/provider tests: **NOT ADDED YET**
 
 - Latest change quick check
 
-- - Nutrition catalog massively expanded with FoodData Central per-100g values and common gram-per-unit mappings; search/suggestions should surface more items. No new automated tests added for catalog size; unit suite still green.
+- Added root `vite.config.ts` to align Vite with TypeScript path aliases (`@` → `src`), which fixed dependency scan/build resolution for `src/main.tsx` imports.
+- `npm run build` now completes successfully again; Vite still emits a large chunk warning for the main bundle.
+- Nutrition catalog massively expanded with FoodData Central per-100g values and common gram-per-unit mappings; search/suggestions should surface more items. No new automated tests added for catalog size; unit suite still green.
 
 ## Present test files
 

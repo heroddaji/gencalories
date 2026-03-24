@@ -14,7 +14,11 @@ export type PredefinedServingUnit =
   | "piece"
   | "slice"
   | "bowl"
-  | "plate";
+  | "plate"
+  | "clove"
+  | "patty"
+  | "can"
+  | "glass";
 
 export const predefinedServingUnits: ReadonlyArray<{
   value: PredefinedServingUnit;
@@ -33,6 +37,10 @@ export const predefinedServingUnits: ReadonlyArray<{
   { value: "slice", label: "Slice" },
   { value: "bowl", label: "Bowl" },
   { value: "plate", label: "Plate" },
+  { value: "clove", label: "Clove" },
+  { value: "patty", label: "Patty" },
+  { value: "can", label: "Can" },
+  { value: "glass", label: "Glass" },
 ];
 
 const servingUnitSynonyms: Record<string, PredefinedServingUnit> = {
@@ -56,6 +64,10 @@ const servingUnitSynonyms: Record<string, PredefinedServingUnit> = {
   slices: "slice",
   bowls: "bowl",
   plates: "plate",
+  cloves: "clove",
+  patties: "patty",
+  cans: "can",
+  glasses: "glass",
 };
 
 const predefinedSet: ReadonlySet<string> = new Set<string>(predefinedServingUnits.map((unit) => unit.value));
