@@ -1,0 +1,5 @@
+- installed firebase -> done
+- create firebase project -> done
+- store simple food entry in ui
+  - have an app state for food entry
+  - when add, sync to firebase

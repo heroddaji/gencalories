@@ -18,7 +18,7 @@ void initializeFirebaseAnalytics();
 
 const appParameters = {
   name: "GenCalories",
-  theme: "auto" as const,
+  theme: "ios" as const,
   routes: [
     {
       path: "/",
