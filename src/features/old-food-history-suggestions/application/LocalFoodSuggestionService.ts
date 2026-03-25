@@ -2,7 +2,7 @@ import type {
   FoodHistoryRepository,
   FoodSuggestionService,
 } from "@/app/di/contracts";
-import { rankSuggestions } from "@/features/food-history-suggestions/domain/suggestionRanking";
+import { rankSuggestions } from "@/features/old-food-history-suggestions/domain/suggestionRanking";
 import type { FoodHistoryItem } from "@/shared/types/core";
 
 export class LocalFoodSuggestionService implements FoodSuggestionService {

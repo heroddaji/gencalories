@@ -5,21 +5,21 @@ import { ListDailyEntriesUseCase } from "@/features/old-food-entry/application/L
 import { LogFoodEntryUseCase } from "@/features/old-food-entry/application/LogFoodEntryUseCase";
 import { UpdateFoodEntryUseCase } from "@/features/old-food-entry/application/UpdateFoodEntryUseCase";
 import { LocalFoodEntryRepository } from "@/features/old-food-entry/infrastructure/LocalFoodEntryRepository";
-import { GetFoodSuggestionsUseCase } from "@/features/food-history-suggestions/application/GetFoodSuggestionsUseCase";
-import { LocalFoodSuggestionService } from "@/features/food-history-suggestions/application/LocalFoodSuggestionService";
+import { GetFoodSuggestionsUseCase } from "@/features/old-food-history-suggestions/application/GetFoodSuggestionsUseCase";
+import { LocalFoodSuggestionService } from "@/features/old-food-history-suggestions/application/LocalFoodSuggestionService";
 import {
   ClearFoodHistoryUseCase,
   DeleteFoodHistoryItemUseCase,
-} from "@/features/food-history-suggestions/application/ManageFoodHistoryUseCases";
-import { LocalFoodHistoryRepository } from "@/features/food-history-suggestions/infrastructure/LocalFoodHistoryRepository";
+} from "@/features/old-food-history-suggestions/application/ManageFoodHistoryUseCases";
+import { LocalFoodHistoryRepository } from "@/features/old-food-history-suggestions/infrastructure/LocalFoodHistoryRepository";
 import {
   LocalFoodSearchProvider,
   LocalNutritionProvider,
-} from "@/features/nutrition-lookup/infrastructure/LocalNutritionProvider";
-import { SaveUserProfileUseCase } from "@/features/user-profile-goals/application/SaveUserProfileUseCase";
-import { SetDailyGoalUseCase } from "@/features/user-profile-goals/application/SetDailyGoalUseCase";
-import { LocalUserProfileRepository } from "@/features/user-profile-goals/infrastructure/LocalUserProfileRepository";
-import { LocalUserGoalRepository } from "@/features/user-profile-goals/infrastructure/LocalUserGoalRepository";
+} from "@/features/old-nutrition-lookup/infrastructure/LocalNutritionProvider";
+import { SaveUserProfileUseCase } from "@/features/old-user-profile-goals/application/SaveUserProfileUseCase";
+import { SetDailyGoalUseCase } from "@/features/old-user-profile-goals/application/SetDailyGoalUseCase";
+import { LocalUserProfileRepository } from "@/features/old-user-profile-goals/infrastructure/LocalUserProfileRepository";
+import { LocalUserGoalRepository } from "@/features/old-user-profile-goals/infrastructure/LocalUserGoalRepository";
 import { WebLiveUpdateProvider } from "@/platform/web/WebLiveUpdateProvider";
 import { WebStorageProvider } from "@/platform/web/WebStorageProvider";
 import { WebSyncProvider } from "@/platform/web/WebSyncProvider";

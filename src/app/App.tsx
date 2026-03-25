@@ -19,7 +19,7 @@ import { createMobileAppContainer } from "@/app/bootstrap/createMobileAppContain
 import { createWebAppContainer } from "@/app/bootstrap/createWebAppContainer";
 import { SummaryPage } from "@/features/old-daily-summary/presentation/SummaryPage";
 import { FoodEntryPage } from "@/features/old-food-entry/presentation/FoodEntryPage";
-import { ProfilePage } from "@/features/user-profile-goals/presentation/ProfilePage";
+import { OldProfilePage } from "@/features/old-user-profile-goals/presentation/OldProfilePage";
 
 setupIonicReact();
 
@@ -51,7 +51,7 @@ export const App = (): React.ReactElement => {
             ) : activeTab === "summary" ? (
               <SummaryPage container={container} />
             ) : (
-              <ProfilePage container={container} />
+              <OldProfilePage container={container} />
             )}
           </div>
         </IonContent>

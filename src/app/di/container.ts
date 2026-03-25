@@ -12,13 +12,13 @@ import type { DeleteFoodEntryUseCase } from "@/features/old-food-entry/applicati
 import type { ListDailyEntriesUseCase } from "@/features/old-food-entry/application/ListDailyEntriesUseCase";
 import type { LogFoodEntryUseCase } from "@/features/old-food-entry/application/LogFoodEntryUseCase";
 import type { UpdateFoodEntryUseCase } from "@/features/old-food-entry/application/UpdateFoodEntryUseCase";
-import type { GetFoodSuggestionsUseCase } from "@/features/food-history-suggestions/application/GetFoodSuggestionsUseCase";
+import type { GetFoodSuggestionsUseCase } from "@/features/old-food-history-suggestions/application/GetFoodSuggestionsUseCase";
 import type {
   ClearFoodHistoryUseCase,
   DeleteFoodHistoryItemUseCase,
-} from "@/features/food-history-suggestions/application/ManageFoodHistoryUseCases";
-import type { SetDailyGoalUseCase } from "@/features/user-profile-goals/application/SetDailyGoalUseCase";
-import type { SaveUserProfileUseCase } from "@/features/user-profile-goals/application/SaveUserProfileUseCase";
+} from "@/features/old-food-history-suggestions/application/ManageFoodHistoryUseCases";
+import type { SetDailyGoalUseCase } from "@/features/old-user-profile-goals/application/SetDailyGoalUseCase";
+import type { SaveUserProfileUseCase } from "@/features/old-user-profile-goals/application/SaveUserProfileUseCase";
 
 export interface AppContainer {
   readonly userId: string;

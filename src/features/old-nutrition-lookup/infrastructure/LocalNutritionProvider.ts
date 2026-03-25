@@ -1,12 +1,18 @@
 import type { FoodSearchProvider, NutritionProvider } from "@/app/di/contracts";
-import { defaultNutritionCatalog, type CatalogFood } from "@/features/nutrition-lookup/domain/defaultNutritionCatalog";
+import {
+  defaultNutritionCatalog,
+  type CatalogFood,
+} from "@/features/old-nutrition-lookup/domain/defaultNutritionCatalog";
 import type { NutritionSnapshot } from "@/shared/types/core";
 import { normalizeServingUnit } from "@/shared/utils/serving";
 import { normalizeFoodName, stringSimilarity } from "@/shared/utils/text";
 
 const round = (value: number): number => Math.round(value * 10) / 10;
 
-const scaleNutrition = (base: NutritionSnapshot, quantity: number): NutritionSnapshot => {
+const scaleNutrition = (
+  base: NutritionSnapshot,
+  quantity: number,
+): NutritionSnapshot => {
   return {
     calories: round(base.calories * quantity),
     protein: round(base.protein * quantity),
@@ -26,14 +32,24 @@ const UNIT_TO_GRAMS: Record<string, number> = {
   cup: 240,
 };
 
-const nutritionForMass = (per100g: NutritionSnapshot, grams: number): NutritionSnapshot => {
+const nutritionForMass = (
+  per100g: NutritionSnapshot,
+  grams: number,
+): NutritionSnapshot => {
   const factor = grams / 100;
   return scaleNutrition(per100g, factor);
 };
 
-const resolveGrams = (unit: string, quantity: number, food: CatalogFood): number => {
+const resolveGrams = (
+  unit: string,
+  quantity: number,
+  food: CatalogFood,
+): number => {
   const normalizedUnit = normalizeServingUnit(unit);
-  const itemSpecific = food.gramsPerUnit?.[normalizedUnit as keyof NonNullable<CatalogFood["gramsPerUnit"]>];
+  const itemSpecific =
+    food.gramsPerUnit?.[
+      normalizedUnit as keyof NonNullable<CatalogFood["gramsPerUnit"]>
+    ];
   if (itemSpecific) {
     return quantity * itemSpecific;
   }
@@ -63,7 +79,10 @@ export class LocalNutritionProvider implements NutritionProvider {
     quantity: number;
     unit: string;
   }): Promise<NutritionSnapshot> {
-    const quantity = Number.isFinite(input.quantity) && input.quantity > 0 ? input.quantity : 1;
+    const quantity =
+      Number.isFinite(input.quantity) && input.quantity > 0
+        ? input.quantity
+        : 1;
     const normalizedName = normalizeFoodName(input.foodName);
 
     let bestMatch: CatalogFood | null = null;

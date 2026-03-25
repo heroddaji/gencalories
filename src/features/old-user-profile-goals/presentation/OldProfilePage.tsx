@@ -16,7 +16,7 @@ import {
   bmiStatusLabel,
   calculateBmi,
   isHealthyBmi,
-} from "@/features/user-profile-goals/domain/bmi";
+} from "@/features/old-user-profile-goals/domain/bmi";
 import type { UserProfile } from "@/shared/types/core";
 import { versionInfo } from "@/shared/versionInfo";
 
