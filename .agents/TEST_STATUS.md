@@ -3,6 +3,7 @@
 ## Last run summary
 
 - Date: **2026-03-25**
+- Android Java 17 compile check: **PASS** (`JAVA_HOME=$(/usr/libexec/java_home -v 17) GRADLE_USER_HOME=/tmp/gen-calories-gradle ./gradlew :capacitor-android:compileDebugJavaWithJavac --no-daemon`) — latest
 - Typecheck: **PASS** (`npm run typecheck`) — latest; verified after Firebase setup cleanup
 - Unit tests: **PASS** (`npm test -- --silent --reporter default`) — latest
   - 10 test files passed
@@ -13,6 +14,9 @@
 
 - Latest change quick check
 
+- Added a project-level Java 17 override in `android/build.gradle` for Android application/library subprojects and `JavaCompile` tasks.
+- Verified `capacitor-android` compiles with Java 17; this resolves the earlier `invalid source release: 21` failure.
+- During verification, `options.release` was tested and removed because Android Gradle does not support it for these tasks.
 - Added `src/shared/firebase/app.ts` for shared Firebase app initialization and guarded analytics startup.
 - Removed Firebase initialization code from `src/main.tsx`; that file now only boots the active Framework7 app.
 - `src/app/App2.tsx` now triggers Firebase analytics initialization on the active app shell.

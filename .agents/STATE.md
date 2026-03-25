@@ -1,8 +1,9 @@
 # STATE
 
 - Phase: **Phase 1 MVP (web-first + Capacitor-ready structure)**
-- Status: **Firebase web initialization is now on the active Framework7 entry path; typecheck/build/cap sync passing**
+- Status: **Firebase web initialization is on the active Framework7 entry path, and Android Java compilation now overrides to Java 17 successfully**
 - Completed goals (latest at top):
+  - Added a root Android Gradle override to force all Android modules, including `capacitor-android`, to compile with Java 17 instead of Java 21; verified with `:capacitor-android:compileDebugJavaWithJavac`.
   - Moved Firebase web initialization out of `src/main.tsx` into `src/shared/firebase/app.ts`, initialized analytics from `src/app/App2.tsx`, installed the `firebase` SDK, and re-synced Capacitor native projects.
   - Removed custom `src/theme.css` usage, forced `App2` to Framework7 `ios` theme, and simplified the demo so it relies only on `framework7/css/bundle`.
   - Replaced the current entry UI with a simple `Framework7 React` demo in `src/app/App2.tsx`, and cleaned `src/main.tsx`/`index.html` so the app boots through that screen.
@@ -15,6 +16,9 @@
 - Current blockers:
 - None.
 - Latest run notes:
+  - `android/build.gradle` now applies a Java 17 compile override across Android application/library subprojects and their `JavaCompile` tasks.
+  - Verified with `JAVA_HOME=$(/usr/libexec/java_home -v 17) GRADLE_USER_HOME=/tmp/gen-calories-gradle ./gradlew :capacitor-android:compileDebugJavaWithJavac --no-daemon` ✅.
+  - The original `invalid source release: 21` error is resolved by the override; Gradle can compile `capacitor-android` with Java 17 in this repo.
   - Firebase config now lives in `src/shared/firebase/app.ts`; the shared module guards duplicate app initialization and only enables analytics when the browser environment supports it.
   - `src/app/App2.tsx` now triggers Firebase analytics initialization on the active Framework7 app path instead of keeping Firebase bootstrapping in `src/main.tsx`.
   - Installed `firebase` to satisfy the web SDK imports used by the app and the Capacitor Firebase plugin peer dependency.

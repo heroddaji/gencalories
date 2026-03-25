@@ -96,7 +96,10 @@
 - Added guarded analytics initialization and invoked it from the active Framework7 shell in `src/app/App2.tsx`.
 - Installed the `firebase` JavaScript SDK so the app and Capacitor Firebase plugin web layer have their required dependency.
 - Re-synced Capacitor native projects with `npm run cap:sync`.
+- Added a root Android Gradle override so Android modules compile with Java 17 instead of the upstream Java 21 setting.
+- Verified `:capacitor-android:compileDebugJavaWithJavac` passes with JDK 17 after the override.
 - Re-validated with:
   - `npm run typecheck`
   - `npm run build`
   - `npm run cap:sync`
+  - `JAVA_HOME=$(/usr/libexec/java_home -v 17) GRADLE_USER_HOME=/tmp/gen-calories-gradle ./gradlew :capacitor-android:compileDebugJavaWithJavac --no-daemon`

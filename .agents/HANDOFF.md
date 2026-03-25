@@ -2,6 +2,8 @@
 
 ## What was completed (latest)
 
+- Added a root Gradle override in `android/build.gradle` to force Java 17 source/target compatibility across Android modules, including `capacitor-android`.
+- Verified the Java 17 override by running `:capacitor-android:compileDebugJavaWithJavac` with `JAVA_HOME` pointed at JDK 17; build passed.
 - Moved Firebase web setup off the root entry file and into a shared module at `src/shared/firebase/app.ts`.
 - Wired Firebase analytics initialization into the active Framework7 shell in `src/app/App2.tsx`.
 - Removed the inline Firebase initialization block from `src/main.tsx` so the entry file only bootstraps React + Framework7.
@@ -28,6 +30,7 @@
 
 ## Validation status
 
+- `JAVA_HOME=$(/usr/libexec/java_home -v 17) GRADLE_USER_HOME=/tmp/gen-calories-gradle ./gradlew :capacitor-android:compileDebugJavaWithJavac --no-daemon` ✅ (latest)
 - `npm run cap:sync` ✅ (latest; after Firebase dependency/setup cleanup)
 - `npm run build` ✅ (latest; after Firebase wiring change)
 - `npm run typecheck` ✅ (latest; after Firebase wiring change)
@@ -46,6 +49,9 @@
 
 ## Notes from latest run
 
+- Forcing Java 17 is now implemented in the project-level Android Gradle file rather than in generated files like `android/app/capacitor.build.gradle` or vendored files under `node_modules/`.
+- The first verification attempt showed that Android Gradle rejects `options.release`; final fix uses only `sourceCompatibility` and `targetCompatibility`.
+- Keep launching Android builds with JDK 17 if you want this path to stay consistent locally.
 - Firebase config currently lives in source code inside `src/shared/firebase/app.ts`; moving it to `VITE_*` env vars would be a good follow-up before production.
 - Analytics initialization is now called from `App2.tsx`, which matches the currently active app shell. If the app switches back to `src/app/App.tsx`, Firebase bootstrap should move to a shared bootstrap layer rather than another page/shell file.
 - `npm run cap:sync` succeeded and registered both Capacitor Firebase plugins on Android and iOS.
@@ -66,6 +72,6 @@
 ## Immediate next steps
 
 1. Move Firebase web config from hard-coded source values to `VITE_FIREBASE_*` environment variables before production or team sharing.
-2. Decide whether the Framework7 demo should remain a temporary playground or become the main UI direction for the app shell.
-3. If Framework7 is the direction, migrate the demo into the modular feature/presentation structure instead of keeping UI in a single `App2.tsx`.
-4. Investigate or defer the current Vite large-chunk warning with code-splitting/manual chunks.
+2. Decide whether to keep the Java 17 override long-term or instead standardize the team/build machines on Java 21 to match upstream Capacitor defaults.
+3. Decide whether the Framework7 demo should remain a temporary playground or become the main UI direction for the app shell.
+4. If Framework7 is the direction, migrate the demo into the modular feature/presentation structure instead of keeping UI in a single `App2.tsx`.
