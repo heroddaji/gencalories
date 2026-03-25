@@ -22,7 +22,7 @@ Framework7.use(Framework7React);
 
 const appParameters = {
   name: "GenCalories",
-  theme: "ios" as const,
+  theme: "auto" as const,
 };
 
 function HomePage() {
