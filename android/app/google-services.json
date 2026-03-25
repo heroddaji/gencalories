@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "966326325106",
+    "project_id": "gen-calories",
+    "storage_bucket": "gen-calories.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966326325106:android:aa2372ed16fdd6b830d7eb",
+        "android_client_info": {
+          "package_name": "net.nevitech.gencalories"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDc1aWnpU8U4c-IL-pQ1DfbxtxAtiowQX0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
