@@ -89,3 +89,14 @@
 - Re-validated with:
   - `npm run typecheck`
   - `npm test -- --silent --reporter default` (10 files, 27 tests)
+
+## 2026-03-25
+
+- Moved Firebase web setup from `src/main.tsx` into `src/shared/firebase/app.ts`.
+- Added guarded analytics initialization and invoked it from the active Framework7 shell in `src/app/App2.tsx`.
+- Installed the `firebase` JavaScript SDK so the app and Capacitor Firebase plugin web layer have their required dependency.
+- Re-synced Capacitor native projects with `npm run cap:sync`.
+- Re-validated with:
+  - `npm run typecheck`
+  - `npm run build`
+  - `npm run cap:sync`

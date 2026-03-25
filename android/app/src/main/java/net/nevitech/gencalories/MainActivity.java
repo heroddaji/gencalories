@@ -1,4 +1,4 @@
-package com.gencalories.app;
+package net.nevitech.gencalories;
 
 import com.getcapacitor.BridgeActivity;
 

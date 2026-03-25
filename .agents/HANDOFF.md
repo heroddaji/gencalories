@@ -2,6 +2,11 @@
 
 ## What was completed (latest)
 
+- Moved Firebase web setup off the root entry file and into a shared module at `src/shared/firebase/app.ts`.
+- Wired Firebase analytics initialization into the active Framework7 shell in `src/app/App2.tsx`.
+- Removed the inline Firebase initialization block from `src/main.tsx` so the entry file only bootstraps React + Framework7.
+- Installed the `firebase` SDK to satisfy the app imports and the Capacitor Firebase plugin’s web peer dependency.
+- Ran `npm run cap:sync` so Android/iOS plugin registration now reflects the current dependency set, including `@capacitor-firebase/app` and `@capacitor-firebase/firestore`.
 - Switched the Framework7 demo to the built-in `ios` theme in `src/app/App2.tsx`.
 - Removed the `@/theme.css` import from `src/main.tsx` and deleted `src/theme.css` so the app now relies only on `framework7/css/bundle`.
 - Simplified the demo markup to remove custom `app2-*` styling hooks.
@@ -23,6 +28,9 @@
 
 ## Validation status
 
+- `npm run cap:sync` ✅ (latest; after Firebase dependency/setup cleanup)
+- `npm run build` ✅ (latest; after Firebase wiring change)
+- `npm run typecheck` ✅ (latest; after Firebase wiring change)
 - `npm run build` ✅ (latest; after removing `theme.css` and forcing Framework7 iOS theme)
 - `npm run build` ✅ (latest; after wiring Framework7 demo `App2`)
 - `npm run typecheck` ✅ (latest)
@@ -38,6 +46,10 @@
 
 ## Notes from latest run
 
+- Firebase config currently lives in source code inside `src/shared/firebase/app.ts`; moving it to `VITE_*` env vars would be a good follow-up before production.
+- Analytics initialization is now called from `App2.tsx`, which matches the currently active app shell. If the app switches back to `src/app/App.tsx`, Firebase bootstrap should move to a shared bootstrap layer rather than another page/shell file.
+- `npm run cap:sync` succeeded and registered both Capacitor Firebase plugins on Android and iOS.
+- Capacitor still warns that `@capacitor-community/sqlite` lacks `Package.swift`, so SPM-only iOS setups may need extra attention later.
 - The active demo now uses Framework7’s built-in iOS look only; there are no project-specific CSS overrides in the runtime path.
 - `src/theme.css` has been deleted, so any future custom styling should be reintroduced intentionally rather than inherited from the previous Ionic-based screen work.
 - `App2.tsx` is now the active demo shell for experimenting with Framework7 React UI elements.
@@ -53,7 +65,7 @@
 
 ## Immediate next steps
 
-1. Decide whether the Framework7 demo should remain a temporary playground or become the main UI direction for the app shell.
-2. If Framework7 is the direction, migrate the demo into the modular feature/presentation structure instead of keeping UI in a single `App2.tsx`.
-3. Investigate or defer the current Vite large-chunk warning with code-splitting/manual chunks.
-4. Run manual Android/iOS OTA smoke testing to confirm the native provider can fetch, apply, and roll back bundles in practice.
+1. Move Firebase web config from hard-coded source values to `VITE_FIREBASE_*` environment variables before production or team sharing.
+2. Decide whether the Framework7 demo should remain a temporary playground or become the main UI direction for the app shell.
+3. If Framework7 is the direction, migrate the demo into the modular feature/presentation structure instead of keeping UI in a single `App2.tsx`.
+4. Investigate or defer the current Vite large-chunk warning with code-splitting/manual chunks.

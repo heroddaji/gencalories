@@ -11,12 +11,14 @@ import Framework7React, {
 import { DashboardPage } from "@/features/dashboard/presentation/DashboardPage";
 import { DailySummaryPage } from "@/features/daily-summary/presentation/DailySummaryPage";
 import { ProfilePage } from "@/features/profile/presentation/ProfilePage";
+import { initializeFirebaseAnalytics } from "@/shared/firebase/app";
 
 Framework7.use(Framework7React);
+void initializeFirebaseAnalytics();
 
 const appParameters = {
   name: "GenCalories",
-  theme: "ios" as const,
+  theme: "auto" as const,
   routes: [
     {
       path: "/",

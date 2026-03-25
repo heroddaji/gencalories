@@ -3,16 +3,24 @@
 ## Last run summary
 
 - Date: **2026-03-25**
-- Typecheck: **PASS** (`npm run typecheck`) — latest
+- Typecheck: **PASS** (`npm run typecheck`) — latest; verified after Firebase setup cleanup
 - Unit tests: **PASS** (`npm test -- --silent --reporter default`) — latest
   - 10 test files passed
   - 27 tests passed
-- Build: **PASS** (`npm run build`) — latest; verified after removing `theme.css` and using Framework7 iOS theme only
-- Mobile bundle sync: **PASS** (`npm run mobile:bundle` → `npm run cap:sync`) — previous run
+- Build: **PASS** (`npm run build`) — latest; verified after Firebase setup cleanup
+- Mobile bundle sync: **PASS** (`npm run cap:sync`) — latest; Firebase plugins detected on Android and iOS
 - OTA/provider tests: **NOT ADDED YET**
 
 - Latest change quick check
 
+- Added `src/shared/firebase/app.ts` for shared Firebase app initialization and guarded analytics startup.
+- Removed Firebase initialization code from `src/main.tsx`; that file now only boots the active Framework7 app.
+- `src/app/App2.tsx` now triggers Firebase analytics initialization on the active app shell.
+- Installed the `firebase` SDK; typecheck no longer fails on `firebase/app` or `firebase/analytics`.
+- `npm run cap:sync` completed successfully and registered:
+  - `@capacitor-firebase/app`
+  - `@capacitor-firebase/firestore`
+- Existing sync warning remains: `@capacitor-community/sqlite` does not provide `Package.swift`.
 - Forced Framework7 app theme to `ios` in `src/app/App2.tsx`.
 - Removed the `@/theme.css` import from `src/main.tsx`.
 - Deleted `src/theme.css`; runtime styling now comes only from `framework7/css/bundle`.

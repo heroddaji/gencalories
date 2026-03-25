@@ -1,8 +1,9 @@
 # STATE
 
 - Phase: **Phase 1 MVP (web-first + Capacitor-ready structure)**
-- Status: **Framework7 React demo now uses built-in iOS theme only; build passing**
+- Status: **Firebase web initialization is now on the active Framework7 entry path; typecheck/build/cap sync passing**
 - Completed goals (latest at top):
+  - Moved Firebase web initialization out of `src/main.tsx` into `src/shared/firebase/app.ts`, initialized analytics from `src/app/App2.tsx`, installed the `firebase` SDK, and re-synced Capacitor native projects.
   - Removed custom `src/theme.css` usage, forced `App2` to Framework7 `ios` theme, and simplified the demo so it relies only on `framework7/css/bundle`.
   - Replaced the current entry UI with a simple `Framework7 React` demo in `src/app/App2.tsx`, and cleaned `src/main.tsx`/`index.html` so the app boots through that screen.
   - Replaced web-named provider usage inside the mobile DI container with `MobileSyncProvider` and `MobileLiveUpdateProvider`, preserving platform boundaries in bootstrap wiring.
@@ -14,6 +15,11 @@
 - Current blockers:
 - None.
 - Latest run notes:
+  - Firebase config now lives in `src/shared/firebase/app.ts`; the shared module guards duplicate app initialization and only enables analytics when the browser environment supports it.
+  - `src/app/App2.tsx` now triggers Firebase analytics initialization on the active Framework7 app path instead of keeping Firebase bootstrapping in `src/main.tsx`.
+  - Installed `firebase` to satisfy the web SDK imports used by the app and the Capacitor Firebase plugin peer dependency.
+  - `npm run typecheck` ✅, `npm run build` ✅, and `npm run cap:sync` ✅ after the Firebase wiring change.
+  - `npx cap sync` detected `@capacitor-firebase/app` and `@capacitor-firebase/firestore` on both Android and iOS. Existing warning remains: `@capacitor-community/sqlite` does not provide `Package.swift`, so Capacitor warns about SPM compatibility during iOS sync.
   - `src/main.tsx` no longer imports `@/theme.css`; the app now uses Framework7 bundle CSS as the sole active stylesheet.
   - `src/theme.css` was removed.
   - `src/app/App2.tsx` now explicitly uses `theme: "ios"` and no longer depends on custom `app2-*` classes.
