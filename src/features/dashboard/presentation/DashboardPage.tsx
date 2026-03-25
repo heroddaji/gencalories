@@ -18,63 +18,27 @@ import {
 
 export const DashboardPage = () => {
   return (
-    <Page name="Dashboard">
-      <Navbar title="Dashboard" />
+    <Page name="Diary">
+      <Navbar title="Diary" />
+      <Card title="Overview" raised />
 
-      <Block strong inset>
-        Simple starter screen using Framework7 React components inside
-        `App2.tsx`.
-      </Block>
-
-      <BlockTitle>Quick Actions</BlockTitle>
-      <Card>
-        <CardHeader>Food Entry Preview</CardHeader>
+      <Card title="Breakfast" raised>
         <CardContent>
           <List mediaList inset strongIos dividersIos>
-            <ListInput
-              label="Food"
-              type="text"
-              placeholder="Chicken salad"
-              clearButton
-            />
-            <ListInput
-              label="Serving"
-              type="text"
-              placeholder="1 bowl"
-              clearButton
-            />
+            <ListItem title="Oatmeal">
+              <img
+                slot="media"
+                src="https://cdn.framework7.io/placeholder/fashion-88x88-4.jpg"
+                width="44"
+              />
+              <Chip text="150 cal" slot="after" />
+            </ListItem>
           </List>
-
-          <Block>
-            <Chip text="Recent: Oats" />
-            <Chip text="High Protein" />
-            <Chip text="Lunch" />
-          </Block>
-
-          <Block>
-            <Button fill large>
-              Save Entry
-            </Button>
-            <Button tonal large>
-              View Summary
-            </Button>
-          </Block>
         </CardContent>
       </Card>
-
-      <BlockTitle>Today</BlockTitle>
-      <List inset strong>
-        <ListItem title="Calories" after="1,420 kcal" />
-        <ListItem title="Protein" after="96 g" />
-        <ListItem title="Carbs" after="134 g" />
-        <ListItem title="Fat" after="48 g" />
-      </List>
-
-      <Block strong inset>
-        <Link>History</Link>
-        <Link>Goals</Link>
-        <Link>Insights</Link>
-      </Block>
+      <Card title="Lunch" raised />
+      <Card title="Dinner" raised />
+      <Card title="Snacks" raised />
     </Page>
   );
 };
