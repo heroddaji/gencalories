@@ -1,8 +1,10 @@
 # STATE
 
 - Phase: **Phase 1 MVP (web-first + Capacitor-ready structure)**
-- Status: **Mobile bootstrap now uses native-named platform adapters; tests passing**
+- Status: **Framework7 React demo now uses built-in iOS theme only; build passing**
 - Completed goals (latest at top):
+  - Removed custom `src/theme.css` usage, forced `App2` to Framework7 `ios` theme, and simplified the demo so it relies only on `framework7/css/bundle`.
+  - Replaced the current entry UI with a simple `Framework7 React` demo in `src/app/App2.tsx`, and cleaned `src/main.tsx`/`index.html` so the app boots through that screen.
   - Replaced web-named provider usage inside the mobile DI container with `MobileSyncProvider` and `MobileLiveUpdateProvider`, preserving platform boundaries in bootstrap wiring.
   - Implemented `MobileLiveUpdateProvider` on top of the Capawesome Capacitor live-update plugin, with persisted bundle metadata aligned to the app `LiveUpdateProvider` contract.
   - Added a root `vite.config.ts` with the `@` → `src` alias so Vite can resolve `@/app/App` and `@/theme.css` from `src/main.tsx`; `npm run build` passes again.
@@ -12,6 +14,14 @@
 - Current blockers:
 - None.
 - Latest run notes:
+  - `src/main.tsx` no longer imports `@/theme.css`; the app now uses Framework7 bundle CSS as the sole active stylesheet.
+  - `src/theme.css` was removed.
+  - `src/app/App2.tsx` now explicitly uses `theme: "ios"` and no longer depends on custom `app2-*` classes.
+  - `npm run build` still passes after the styling cleanup; the existing large chunk warning remains.
+  - `src/main.tsx` now imports Framework7 bundle CSS directly and renders `App2` without Ionic stylesheet imports.
+  - `index.html` was simplified to standard Vite root bootstrapping with app metadata only; Framework7 CSS is no longer linked from `node_modules` in HTML.
+  - `src/app/App2.tsx` now contains a working single-page Framework7 demo with navbar, card, list inputs, chips, buttons, summary rows, and toolbar links.
+  - `npm run build` passes after the Framework7 wiring change; the existing large chunk warning remains.
   - `createMobileAppContainer` no longer imports `WebSyncProvider` or `WebLiveUpdateProvider`; mobile bootstrap now resolves everything from `src/platform/mobile/*`.
   - The native live-update adapter now uses `@capawesome/capacitor-live-update` to fetch/download/set/reload bundles while persisting contract-compatible state through the mobile storage provider.
   - `MobileSyncProvider` is currently a mobile-scoped no-op adapter so the container has a clean platform boundary without changing higher-level app flow.
