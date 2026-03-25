@@ -8,10 +8,10 @@ import type {
   UserGoalRepository,
   UserProfileRepository,
 } from "@/app/di/contracts";
-import type { DeleteFoodEntryUseCase } from "@/features/food-entry/application/DeleteFoodEntryUseCase";
-import type { ListDailyEntriesUseCase } from "@/features/food-entry/application/ListDailyEntriesUseCase";
-import type { LogFoodEntryUseCase } from "@/features/food-entry/application/LogFoodEntryUseCase";
-import type { UpdateFoodEntryUseCase } from "@/features/food-entry/application/UpdateFoodEntryUseCase";
+import type { DeleteFoodEntryUseCase } from "@/features/old-food-entry/application/DeleteFoodEntryUseCase";
+import type { ListDailyEntriesUseCase } from "@/features/old-food-entry/application/ListDailyEntriesUseCase";
+import type { LogFoodEntryUseCase } from "@/features/old-food-entry/application/LogFoodEntryUseCase";
+import type { UpdateFoodEntryUseCase } from "@/features/old-food-entry/application/UpdateFoodEntryUseCase";
 import type { GetFoodSuggestionsUseCase } from "@/features/food-history-suggestions/application/GetFoodSuggestionsUseCase";
 import type {
   ClearFoodHistoryUseCase,

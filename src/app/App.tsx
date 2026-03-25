@@ -17,8 +17,8 @@ import { barChartOutline, homeOutline, personOutline } from "ionicons/icons";
 import { Capacitor } from "@capacitor/core";
 import { createMobileAppContainer } from "@/app/bootstrap/createMobileAppContainer";
 import { createWebAppContainer } from "@/app/bootstrap/createWebAppContainer";
-import { SummaryPage } from "@/features/daily-summary/presentation/SummaryPage";
-import { FoodEntryPage } from "@/features/food-entry/presentation/FoodEntryPage";
+import { SummaryPage } from "@/features/old-daily-summary/presentation/SummaryPage";
+import { FoodEntryPage } from "@/features/old-food-entry/presentation/FoodEntryPage";
 import { ProfilePage } from "@/features/user-profile-goals/presentation/ProfilePage";
 
 setupIonicReact();
@@ -26,10 +26,14 @@ setupIonicReact();
 export const App = (): React.ReactElement => {
   const container = useMemo(
     () =>
-      Capacitor.isNativePlatform() ? createMobileAppContainer() : createWebAppContainer(),
+      Capacitor.isNativePlatform()
+        ? createMobileAppContainer()
+        : createWebAppContainer(),
     [],
   );
-  const [activeTab, setActiveTab] = useState<"home" | "summary" | "profile">("home");
+  const [activeTab, setActiveTab] = useState<"home" | "summary" | "profile">(
+    "home",
+  );
 
   return (
     <IonApp>

@@ -9,17 +9,26 @@ import {
   IonSelectOption,
   IonText,
 } from "@ionic/react";
-import { useCallback, useEffect, useMemo, useState, type ReactElement } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactElement,
+} from "react";
 import type { AppContainer } from "@/app/di/container";
-import { DailySummaryCard } from "@/features/daily-summary/presentation/DailySummaryCard";
-import { mealTypeLabels, mealTypeOrder } from "@/features/food-entry/domain/mealTypes";
-import { AddFoodToMealPage } from "@/features/food-entry/presentation/AddFoodToMealPage";
+import { DailySummaryCard } from "@/features/old-daily-summary/presentation/DailySummaryCard";
+import {
+  mealTypeLabels,
+  mealTypeOrder,
+} from "@/features/old-food-entry/domain/mealTypes";
+import { AddFoodToMealPage } from "@/features/old-food-entry/presentation/AddFoodToMealPage";
 import {
   CUSTOM_SERVING_UNIT,
   DEFAULT_SERVING_UNIT,
   normalizeServingUnit,
   predefinedServingUnits,
-} from "@/features/food-entry/domain/servingUnits";
+} from "@/features/old-food-entry/domain/servingUnits";
 import type { LiveUpdateState } from "@/app/di/contracts";
 import type {
   DailyConsumptionSummary,
@@ -59,7 +68,9 @@ const toRoundedMealSummary = (source: MealSummary): MealSummary => ({
   count: source.count,
 });
 
-const summarizeMeals = (entries: FoodEntry[]): Record<MealType, MealSummary> => {
+const summarizeMeals = (
+  entries: FoodEntry[],
+): Record<MealType, MealSummary> => {
   const mealTotals: Record<MealType, MealSummary> = {
     breakfast: createEmptyMealSummary(),
     lunch: createEmptyMealSummary(),
@@ -84,13 +95,16 @@ const summarizeMeals = (entries: FoodEntry[]): Record<MealType, MealSummary> => 
   };
 };
 
-export const FoodEntryPage = ({ container }: FoodEntryPageProps): ReactElement => {
+export const FoodEntryPage = ({
+  container,
+}: FoodEntryPageProps): ReactElement => {
   const today = useMemo(() => toDateKey(new Date()), []);
 
   const [entries, setEntries] = useState<FoodEntry[]>([]);
   const [summary, setSummary] = useState<DailyConsumptionSummary | null>(null);
   const [message, setMessage] = useState("");
-  const [liveUpdateState, setLiveUpdateState] = useState<LiveUpdateState | null>(null);
+  const [liveUpdateState, setLiveUpdateState] =
+    useState<LiveUpdateState | null>(null);
   const [mealInAddMode, setMealInAddMode] = useState<MealType | null>(null);
   const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
   const [editQuantity, setEditQuantity] = useState("");
@@ -120,12 +134,16 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): ReactElement =
       const check = await container.liveUpdateProvider.checkForUpdate();
       if (check.hasUpdate && check.nextBundleVersion) {
         try {
-          await container.liveUpdateProvider.applyUpdate(check.nextBundleVersion);
+          await container.liveUpdateProvider.applyUpdate(
+            check.nextBundleVersion,
+          );
           const updatedState = await container.liveUpdateProvider.getState();
           setLiveUpdateState(updatedState);
           setMessage(`Applied live update ${check.nextBundleVersion}.`);
         } catch {
-          await container.liveUpdateProvider.rollback("Update application failed.");
+          await container.liveUpdateProvider.rollback(
+            "Update application failed.",
+          );
           const rollbackState = await container.liveUpdateProvider.getState();
           setLiveUpdateState(rollbackState);
           setMessage("Update failed and was rolled back to bundled baseline.");
@@ -172,8 +190,14 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): ReactElement =
         ? normalizeServingUnit(editCustomServingUnit)
         : editServingUnit;
 
-    if (!Number.isFinite(parsedQuantity) || parsedQuantity <= 0 || !normalizedUnit) {
-      setMessage("Please provide valid quantity and serving unit before saving.");
+    if (
+      !Number.isFinite(parsedQuantity) ||
+      parsedQuantity <= 0 ||
+      !normalizedUnit
+    ) {
+      setMessage(
+        "Please provide valid quantity and serving unit before saving.",
+      );
       return;
     }
 
@@ -245,7 +269,9 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): ReactElement =
                 <div className="meal-breakdown-values">
                   <h3>{mealTypeLabels[mealType]}</h3>
                   <p>
-                    Calories {mealSummary.calories} • Protein {mealSummary.protein}g • Carbs {mealSummary.carbs}g • Fat {mealSummary.fat}g
+                    Calories {mealSummary.calories} • Protein{" "}
+                    {mealSummary.protein}g • Carbs {mealSummary.carbs}g • Fat{" "}
+                    {mealSummary.fat}g
                   </p>
                   <IonText color="medium">
                     <small>{mealSummary.count} foods logged</small>
@@ -275,7 +301,9 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): ReactElement =
                           <div>
                             <strong>{entry.foodName}</strong>
                             <p>
-                              {entry.nutritionSnapshot.calories} kcal • {entry.quantity} {entry.servingUnit} • {formatTime(entry.consumedAt)}
+                              {entry.nutritionSnapshot.calories} kcal •{" "}
+                              {entry.quantity} {entry.servingUnit} •{" "}
+                              {formatTime(entry.consumedAt)}
                             </p>
                           </div>
 
@@ -292,37 +320,57 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): ReactElement =
                               <IonSelect
                                 value={editServingUnit}
                                 onIonChange={(event) => {
-                                  setEditServingUnit(event.detail.value ?? DEFAULT_SERVING_UNIT);
+                                  setEditServingUnit(
+                                    event.detail.value ?? DEFAULT_SERVING_UNIT,
+                                  );
                                 }}
                               >
                                 {predefinedServingUnits.map((unit) => (
-                                  <IonSelectOption key={unit.value} value={unit.value}>
+                                  <IonSelectOption
+                                    key={unit.value}
+                                    value={unit.value}
+                                  >
                                     {unit.label}
                                   </IonSelectOption>
                                 ))}
-                                <IonSelectOption value={CUSTOM_SERVING_UNIT}>Custom</IonSelectOption>
+                                <IonSelectOption value={CUSTOM_SERVING_UNIT}>
+                                  Custom
+                                </IonSelectOption>
                               </IonSelect>
                               {editServingUnit === CUSTOM_SERVING_UNIT ? (
                                 <IonInput
                                   value={editCustomServingUnit}
                                   placeholder="Custom unit"
                                   onIonInput={(event) => {
-                                    setEditCustomServingUnit(event.detail.value ?? "");
+                                    setEditCustomServingUnit(
+                                      event.detail.value ?? "",
+                                    );
                                   }}
                                 />
                               ) : null}
                               <div className="meal-entry-actions">
-                                <IonButton size="small" onClick={() => void handleSaveEntry(entry)}>
+                                <IonButton
+                                  size="small"
+                                  onClick={() => void handleSaveEntry(entry)}
+                                >
                                   Save
                                 </IonButton>
-                                <IonButton size="small" fill="clear" onClick={cancelEditing}>
+                                <IonButton
+                                  size="small"
+                                  fill="clear"
+                                  onClick={cancelEditing}
+                                >
                                   Cancel
                                 </IonButton>
                               </div>
                             </div>
                           ) : (
                             <div className="meal-entry-actions">
-                              <IonButton size="small" fill="outline" onClick={() => startEditingEntry(entry)}>
+                              <IonButton
+                                size="small"
+                                fill="outline"
+                                onClick={() => startEditingEntry(entry)}
+                              >
                                 Edit
                               </IonButton>
                               <IonButton
@@ -353,8 +401,11 @@ export const FoodEntryPage = ({ container }: FoodEntryPageProps): ReactElement =
         <IonCardContent>
           {liveUpdateState ? (
             <p>
-              Bundle <strong>{liveUpdateState.currentBundleVersion}</strong> • applied {new Date(liveUpdateState.appliedAt).toLocaleString()}
-              {liveUpdateState.rollbackReason ? ` • rollback: ${liveUpdateState.rollbackReason}` : ""}
+              Bundle <strong>{liveUpdateState.currentBundleVersion}</strong> •
+              applied {new Date(liveUpdateState.appliedAt).toLocaleString()}
+              {liveUpdateState.rollbackReason
+                ? ` • rollback: ${liveUpdateState.rollbackReason}`
+                : ""}
               <br />
               App {versionInfo.appVersion} • Build {versionInfo.bundleVersion}
             </p>

@@ -1,9 +1,27 @@
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonText } from "@ionic/react";
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from "react";
+import {
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonText,
+} from "@ionic/react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactElement,
+} from "react";
 import type { AppContainer } from "@/app/di/container";
-import { DailySummaryCard } from "@/features/daily-summary/presentation/DailySummaryCard";
+import { DailySummaryCard } from "@/features/old-daily-summary/presentation/DailySummaryCard";
 import type { DailyConsumptionSummary } from "@/shared/types/core";
-import { addDaysToDateKey, formatDateLabel, toDateKey } from "@/shared/utils/date";
+import {
+  addDaysToDateKey,
+  formatDateLabel,
+  toDateKey,
+} from "@/shared/utils/date";
 
 interface SummaryPageProps {
   container: AppContainer;
@@ -15,11 +33,17 @@ export const SummaryPage = ({ container }: SummaryPageProps): ReactElement => {
   const [isLoading, setIsLoading] = useState(true);
   const touchStartXRef = useRef<number | null>(null);
 
-  const dateLabel = useMemo(() => formatDateLabel(selectedDate), [selectedDate]);
+  const dateLabel = useMemo(
+    () => formatDateLabel(selectedDate),
+    [selectedDate],
+  );
 
   const refreshSummary = useCallback(async (): Promise<void> => {
     setIsLoading(true);
-    const nextSummary = await container.dailySummaryService.forDate(container.userId, selectedDate);
+    const nextSummary = await container.dailySummaryService.forDate(
+      container.userId,
+      selectedDate,
+    );
     setSummary(nextSummary);
     setIsLoading(false);
   }, [container, selectedDate]);
@@ -58,23 +82,37 @@ export const SummaryPage = ({ container }: SummaryPageProps): ReactElement => {
         </IonCardHeader>
         <IonCardContent>
           <div className="date-nav-row">
-            <IonButton size="small" fill="outline" onClick={() => handleShiftDate(-1)}>
+            <IonButton
+              size="small"
+              fill="outline"
+              onClick={() => handleShiftDate(-1)}
+            >
               Prev Day
             </IonButton>
             <IonText color="medium">
               <strong>{dateLabel}</strong>
             </IonText>
-            <IonButton size="small" fill="outline" onClick={() => handleShiftDate(1)}>
+            <IonButton
+              size="small"
+              fill="outline"
+              onClick={() => handleShiftDate(1)}
+            >
               Next Day
             </IonButton>
           </div>
           <IonText color="medium">
-            <small>Tip: Swipe left/right anywhere on this tab to change day.</small>
+            <small>
+              Tip: Swipe left/right anywhere on this tab to change day.
+            </small>
           </IonText>
         </IonCardContent>
       </IonCard>
 
-      <DailySummaryCard summary={summary} title={`Summary • ${dateLabel}`} isLoading={isLoading} />
+      <DailySummaryCard
+        summary={summary}
+        title={`Summary • ${dateLabel}`}
+        isLoading={isLoading}
+      />
     </div>
   );
 };

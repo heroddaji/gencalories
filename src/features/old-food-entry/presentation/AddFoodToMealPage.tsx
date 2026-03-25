@@ -17,13 +17,13 @@ import {
 import { arrowBackOutline } from "ionicons/icons";
 import { useEffect, useMemo, useState, type ReactElement } from "react";
 import type { AppContainer } from "@/app/di/container";
-import { mealTypeLabels } from "@/features/food-entry/domain/mealTypes";
+import { mealTypeLabels } from "@/features/old-food-entry/domain/mealTypes";
 import {
   CUSTOM_SERVING_UNIT,
   DEFAULT_SERVING_UNIT,
   normalizeServingUnit,
   predefinedServingUnits,
-} from "@/features/food-entry/domain/servingUnits";
+} from "@/features/old-food-entry/domain/servingUnits";
 import type { FoodEntry, MealType } from "@/shared/types/core";
 import { formatDateLabel } from "@/shared/utils/date";
 
@@ -70,7 +70,10 @@ export const AddFoodToMealPage = ({
 
   const loadMealEntries = useMemo(
     () => async (): Promise<void> => {
-      const entries = await container.listDailyEntriesUseCase.execute(container.userId, dateKey);
+      const entries = await container.listDailyEntriesUseCase.execute(
+        container.userId,
+        dateKey,
+      );
       setMealEntries(entries.filter((entry) => entry.mealType === mealType));
     },
     [container, dateKey, mealType],
@@ -167,7 +170,11 @@ export const AddFoodToMealPage = ({
         ? normalizeServingUnit(editCustomServingUnit)
         : editServingUnit;
 
-    if (!Number.isFinite(parsedQuantity) || parsedQuantity <= 0 || !resolvedServingUnit) {
+    if (
+      !Number.isFinite(parsedQuantity) ||
+      parsedQuantity <= 0 ||
+      !resolvedServingUnit
+    ) {
       setMessage("Please provide valid quantity and serving unit.");
       return;
     }
@@ -207,7 +214,10 @@ export const AddFoodToMealPage = ({
 
       <IonCardContent>
         <IonText color="medium">
-          <p>Manage foods in {mealLabel}: add new, edit quantity/unit, or remove items.</p>
+          <p>
+            Manage foods in {mealLabel}: add new, edit quantity/unit, or remove
+            items.
+          </p>
         </IonText>
 
         <div className="meal-entry-list">
@@ -223,7 +233,8 @@ export const AddFoodToMealPage = ({
                   <div>
                     <strong>{entry.foodName}</strong>
                     <p>
-                      {entry.nutritionSnapshot.calories} kcal • {entry.quantity} {entry.servingUnit}
+                      {entry.nutritionSnapshot.calories} kcal • {entry.quantity}{" "}
+                      {entry.servingUnit}
                     </p>
                   </div>
 
@@ -240,7 +251,9 @@ export const AddFoodToMealPage = ({
                       <IonSelect
                         value={editServingUnit}
                         onIonChange={(event) => {
-                          setEditServingUnit(event.detail.value ?? DEFAULT_SERVING_UNIT);
+                          setEditServingUnit(
+                            event.detail.value ?? DEFAULT_SERVING_UNIT,
+                          );
                         }}
                       >
                         {predefinedServingUnits.map((unit) => (
@@ -248,7 +261,9 @@ export const AddFoodToMealPage = ({
                             {unit.label}
                           </IonSelectOption>
                         ))}
-                        <IonSelectOption value={CUSTOM_SERVING_UNIT}>Custom</IonSelectOption>
+                        <IonSelectOption value={CUSTOM_SERVING_UNIT}>
+                          Custom
+                        </IonSelectOption>
                       </IonSelect>
                       {editServingUnit === CUSTOM_SERVING_UNIT ? (
                         <IonInput
@@ -260,17 +275,28 @@ export const AddFoodToMealPage = ({
                         />
                       ) : null}
                       <div className="meal-entry-actions">
-                        <IonButton size="small" onClick={() => void handleSaveEntry(entry)}>
+                        <IonButton
+                          size="small"
+                          onClick={() => void handleSaveEntry(entry)}
+                        >
                           Save
                         </IonButton>
-                        <IonButton size="small" fill="clear" onClick={cancelEditing}>
+                        <IonButton
+                          size="small"
+                          fill="clear"
+                          onClick={cancelEditing}
+                        >
                           Cancel
                         </IonButton>
                       </div>
                     </div>
                   ) : (
                     <div className="meal-entry-actions">
-                      <IonButton size="small" fill="outline" onClick={() => startEditingEntry(entry)}>
+                      <IonButton
+                        size="small"
+                        fill="outline"
+                        onClick={() => startEditingEntry(entry)}
+                      >
                         Edit
                       </IonButton>
                       <IonButton
@@ -325,7 +351,9 @@ export const AddFoodToMealPage = ({
                   {unit.label}
                 </IonSelectOption>
               ))}
-              <IonSelectOption value={CUSTOM_SERVING_UNIT}>Custom</IonSelectOption>
+              <IonSelectOption value={CUSTOM_SERVING_UNIT}>
+                Custom
+              </IonSelectOption>
             </IonSelect>
           </IonItem>
         </div>
@@ -359,7 +387,9 @@ export const AddFoodToMealPage = ({
                   }}
                   disabled={isSavingFood}
                 >
-                  {isSavingFood && savingFoodName === food ? "Adding..." : "Add"}
+                  {isSavingFood && savingFoodName === food
+                    ? "Adding..."
+                    : "Add"}
                 </IonButton>
               </IonItem>
             ))}
@@ -367,7 +397,8 @@ export const AddFoodToMealPage = ({
         )}
 
         <IonNote color="medium">
-          Nutrition is resolved from local catalog using selected quantity and serving unit.
+          Nutrition is resolved from local catalog using selected quantity and
+          serving unit.
         </IonNote>
 
         {message ? (

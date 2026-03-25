@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LocalDailySummaryService } from "@/features/daily-summary/application/LocalDailySummaryService";
+import { LocalDailySummaryService } from "@/features/old-daily-summary/application/LocalDailySummaryService";
 import type {
   FoodEntryRepository,
   UserGoalRepository,
@@ -14,7 +14,9 @@ class StubFoodEntryRepository implements FoodEntryRepository {
   }
 
   async update(entry: FoodEntry): Promise<void> {
-    const index = this.entries.findIndex((candidate) => candidate.id === entry.id);
+    const index = this.entries.findIndex(
+      (candidate) => candidate.id === entry.id,
+    );
     if (index >= 0) {
       this.entries[index] = entry;
     }

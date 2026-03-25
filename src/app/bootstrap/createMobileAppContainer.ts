@@ -1,10 +1,10 @@
 import type { AppContainer } from "@/app/di/container";
-import { LocalDailySummaryService } from "@/features/daily-summary/application/LocalDailySummaryService";
-import { DeleteFoodEntryUseCase } from "@/features/food-entry/application/DeleteFoodEntryUseCase";
-import { ListDailyEntriesUseCase } from "@/features/food-entry/application/ListDailyEntriesUseCase";
-import { LogFoodEntryUseCase } from "@/features/food-entry/application/LogFoodEntryUseCase";
-import { UpdateFoodEntryUseCase } from "@/features/food-entry/application/UpdateFoodEntryUseCase";
-import { LocalFoodEntryRepository } from "@/features/food-entry/infrastructure/LocalFoodEntryRepository";
+import { LocalDailySummaryService } from "@/features/old-daily-summary/application/LocalDailySummaryService";
+import { DeleteFoodEntryUseCase } from "@/features/old-food-entry/application/DeleteFoodEntryUseCase";
+import { ListDailyEntriesUseCase } from "@/features/old-food-entry/application/ListDailyEntriesUseCase";
+import { LogFoodEntryUseCase } from "@/features/old-food-entry/application/LogFoodEntryUseCase";
+import { UpdateFoodEntryUseCase } from "@/features/old-food-entry/application/UpdateFoodEntryUseCase";
+import { LocalFoodEntryRepository } from "@/features/old-food-entry/infrastructure/LocalFoodEntryRepository";
 import { GetFoodSuggestionsUseCase } from "@/features/food-history-suggestions/application/GetFoodSuggestionsUseCase";
 import { LocalFoodSuggestionService } from "@/features/food-history-suggestions/application/LocalFoodSuggestionService";
 import {
@@ -24,13 +24,17 @@ import { MobileLiveUpdateProvider } from "@/platform/mobile/MobileLiveUpdateProv
 import { MobileStorageProvider } from "@/platform/mobile/MobileStorageProvider";
 import { MobileSyncProvider } from "@/platform/mobile/MobileSyncProvider";
 
-export const createMobileAppContainer = (userId = "local-user"): AppContainer => {
+export const createMobileAppContainer = (
+  userId = "local-user",
+): AppContainer => {
   const storageProvider = new MobileStorageProvider();
   const syncProvider = new MobileSyncProvider();
   const nutritionProvider = new LocalNutritionProvider();
   const foodSearchProvider = new LocalFoodSearchProvider();
   const foodHistoryRepository = new LocalFoodHistoryRepository(storageProvider);
-  const foodSuggestionService = new LocalFoodSuggestionService(foodHistoryRepository);
+  const foodSuggestionService = new LocalFoodSuggestionService(
+    foodHistoryRepository,
+  );
   const foodEntryRepository = new LocalFoodEntryRepository(storageProvider);
   const userGoalRepository = new LocalUserGoalRepository(storageProvider);
   const userProfileRepository = new LocalUserProfileRepository(storageProvider);
@@ -45,22 +49,32 @@ export const createMobileAppContainer = (userId = "local-user"): AppContainer =>
     nutritionProvider,
     foodEntryRepository,
   );
-  const deleteFoodEntryUseCase = new DeleteFoodEntryUseCase(foodEntryRepository);
+  const deleteFoodEntryUseCase = new DeleteFoodEntryUseCase(
+    foodEntryRepository,
+  );
 
-  const listDailyEntriesUseCase = new ListDailyEntriesUseCase(foodEntryRepository);
+  const listDailyEntriesUseCase = new ListDailyEntriesUseCase(
+    foodEntryRepository,
+  );
   const getFoodSuggestionsUseCase = new GetFoodSuggestionsUseCase(
     foodSuggestionService,
     foodSearchProvider,
   );
 
-  const clearFoodHistoryUseCase = new ClearFoodHistoryUseCase(foodHistoryRepository);
-  const deleteFoodHistoryItemUseCase = new DeleteFoodHistoryItemUseCase(foodHistoryRepository);
+  const clearFoodHistoryUseCase = new ClearFoodHistoryUseCase(
+    foodHistoryRepository,
+  );
+  const deleteFoodHistoryItemUseCase = new DeleteFoodHistoryItemUseCase(
+    foodHistoryRepository,
+  );
   const dailySummaryService = new LocalDailySummaryService(
     foodEntryRepository,
     userGoalRepository,
   );
   const setDailyGoalUseCase = new SetDailyGoalUseCase(userGoalRepository);
-  const saveUserProfileUseCase = new SaveUserProfileUseCase(userProfileRepository);
+  const saveUserProfileUseCase = new SaveUserProfileUseCase(
+    userProfileRepository,
+  );
 
   return {
     userId,

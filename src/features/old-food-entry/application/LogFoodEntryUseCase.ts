@@ -6,7 +6,7 @@ import type {
 import {
   createFoodEntry,
   type CreateFoodEntryInput,
-} from "@/features/food-entry/domain/foodEntryFactory";
+} from "@/features/old-food-entry/domain/foodEntryFactory";
 import type { FoodEntry, MealType } from "@/shared/types/core";
 
 export interface LogFoodEntryInput {

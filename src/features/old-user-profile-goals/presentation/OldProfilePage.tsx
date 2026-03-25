@@ -33,7 +33,9 @@ const parsePositiveNumber = (value: string): number | null => {
   return parsed;
 };
 
-export const ProfilePage = ({ container }: ProfilePageProps): ReactElement => {
+export const OldProfilePage = ({
+  container,
+}: ProfilePageProps): ReactElement => {
   const [dailyGoal, setDailyGoal] = useState("");
   const [currentGoal, setCurrentGoal] = useState<number | null>(null);
   const [age, setAge] = useState("");
@@ -54,8 +56,12 @@ export const ProfilePage = ({ container }: ProfilePageProps): ReactElement => {
 
       setAge(profile.age === null ? "" : String(profile.age));
       setHeightCm(profile.heightCm === null ? "" : String(profile.heightCm));
-      setCurrentWeightKg(profile.currentWeightKg === null ? "" : String(profile.currentWeightKg));
-      setTargetWeightKg(profile.targetWeightKg === null ? "" : String(profile.targetWeightKg));
+      setCurrentWeightKg(
+        profile.currentWeightKg === null ? "" : String(profile.currentWeightKg),
+      );
+      setTargetWeightKg(
+        profile.targetWeightKg === null ? "" : String(profile.targetWeightKg),
+      );
     };
 
     void loadProfileData();
@@ -174,7 +180,8 @@ export const ProfilePage = ({ container }: ProfilePageProps): ReactElement => {
           <div>
             <small>Current BMI</small>
             <p>
-              <strong>{currentBmi ?? "--"}</strong> ({bmiStatusLabel(currentBmi)})
+              <strong>{currentBmi ?? "--"}</strong> (
+              {bmiStatusLabel(currentBmi)})
             </p>
             <IonText color={currentHealthy ? "success" : "warning"}>
               <small>
@@ -206,12 +213,18 @@ export const ProfilePage = ({ container }: ProfilePageProps): ReactElement => {
         <div className="bmi-scale" aria-label="BMI visualization">
           <div className="bmi-healthy-band" />
           {currentBmiPosition !== null ? (
-            <div className="bmi-marker current" style={{ left: `${currentBmiPosition}%` }}>
+            <div
+              className="bmi-marker current"
+              style={{ left: `${currentBmiPosition}%` }}
+            >
               C
             </div>
           ) : null}
           {targetBmiPosition !== null ? (
-            <div className="bmi-marker target" style={{ left: `${targetBmiPosition}%` }}>
+            <div
+              className="bmi-marker target"
+              style={{ left: `${targetBmiPosition}%` }}
+            >
               T
             </div>
           ) : null}

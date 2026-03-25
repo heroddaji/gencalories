@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { StorageProvider } from "@/app/di/contracts";
-import { LocalFoodEntryRepository } from "@/features/food-entry/infrastructure/LocalFoodEntryRepository";
+import { LocalFoodEntryRepository } from "@/features/old-food-entry/infrastructure/LocalFoodEntryRepository";
 import type { FoodEntry } from "@/shared/types/core";
 
 class InMemoryStorage implements StorageProvider {
@@ -41,11 +41,13 @@ describe("LocalFoodEntryRepository", () => {
     const repository = new LocalFoodEntryRepository(new InMemoryStorage());
     await repository.save(sampleEntry({ id: "a", userId: "u1" }));
     await repository.save(sampleEntry({ id: "b", userId: "u2" }));
-    await repository.save(sampleEntry({
-      id: "c",
-      userId: "u1",
-      consumedAt: "2026-03-04T08:00:00.000+11:00",
-    }));
+    await repository.save(
+      sampleEntry({
+        id: "c",
+        userId: "u1",
+        consumedAt: "2026-03-04T08:00:00.000+11:00",
+      }),
+    );
 
     const results = await repository.listByDate("u1", "2026-03-03");
     expect(results.map((entry) => entry.id)).toEqual(["a"]);

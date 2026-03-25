@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createFoodEntry } from "@/features/food-entry/domain/foodEntryFactory";
+import { createFoodEntry } from "@/features/old-food-entry/domain/foodEntryFactory";
 
 describe("createFoodEntry", () => {
   it("creates a normalized food entry", () => {

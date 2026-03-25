@@ -3,7 +3,7 @@ import type {
   FoodEntryRepository,
   NutritionProvider,
 } from "@/app/di/contracts";
-import { UpdateFoodEntryUseCase } from "@/features/food-entry/application/UpdateFoodEntryUseCase";
+import { UpdateFoodEntryUseCase } from "@/features/old-food-entry/application/UpdateFoodEntryUseCase";
 import type { FoodEntry, NutritionSnapshot } from "@/shared/types/core";
 
 class StubNutritionProvider implements NutritionProvider {

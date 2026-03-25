@@ -1,5 +1,9 @@
-import type { FoodEntry, MealType, NutritionSnapshot } from "@/shared/types/core";
-import { normalizeServingUnit } from "@/features/food-entry/domain/servingUnits";
+import type {
+  FoodEntry,
+  MealType,
+  NutritionSnapshot,
+} from "@/shared/types/core";
+import { normalizeServingUnit } from "@/features/old-food-entry/domain/servingUnits";
 import { normalizeFoodName } from "@/shared/utils/text";
 
 export interface CreateFoodEntryInput {
@@ -12,7 +16,12 @@ export interface CreateFoodEntryInput {
   nutritionSnapshot: NutritionSnapshot;
 }
 
-const MEAL_TYPES: ReadonlySet<MealType> = new Set(["breakfast", "lunch", "dinner", "snack"]);
+const MEAL_TYPES: ReadonlySet<MealType> = new Set([
+  "breakfast",
+  "lunch",
+  "dinner",
+  "snack",
+]);
 
 const createId = (): string => {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
