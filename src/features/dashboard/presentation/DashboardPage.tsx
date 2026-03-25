@@ -19,6 +19,8 @@ import {
 export const DashboardPage = () => {
   return (
     <Page name="Dashboard">
+      <Navbar title="Dashboard" />
+
       <Block strong inset>
         Simple starter screen using Framework7 React components inside
         `App2.tsx`.

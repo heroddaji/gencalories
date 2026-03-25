@@ -18,7 +18,7 @@ import {
 export const ProfilePage = () => {
   return (
     <Page name="profile">
-      <Navbar title="Profile" backLink="Back" />
+      <Navbar title="Profile" />
       hello profile
     </Page>
   );

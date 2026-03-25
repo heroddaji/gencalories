@@ -18,7 +18,7 @@ import {
 export const DailySummaryPage = () => {
   return (
     <Page name="daily-summary">
-      <Navbar title="Daily Summary" backLink="Back" />
+      <Navbar title="Daily Summary" />
       hello daily summary
     </Page>
   );
