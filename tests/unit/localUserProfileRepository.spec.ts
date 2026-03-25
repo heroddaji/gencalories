@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { StorageProvider } from "@/app/di/contracts";
-import { LocalUserProfileRepository } from "@/features/user-profile-goals/infrastructure/LocalUserProfileRepository";
+import { LocalUserProfileRepository } from "@/features/old-user-profile-goals/infrastructure/LocalUserProfileRepository";
 
 class InMemoryStorage implements StorageProvider {
   private readonly map = new Map<string, string>();

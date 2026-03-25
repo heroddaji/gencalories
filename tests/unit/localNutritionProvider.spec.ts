@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LocalNutritionProvider } from "@/features/nutrition-lookup/infrastructure/LocalNutritionProvider";
+import { LocalNutritionProvider } from "@/features/old-nutrition-lookup/infrastructure/LocalNutritionProvider";
 
 describe("LocalNutritionProvider", () => {
   const provider = new LocalNutritionProvider();

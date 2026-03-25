@@ -4,7 +4,7 @@ import {
   bmiStatusLabel,
   calculateBmi,
   isHealthyBmi,
-} from "@/features/user-profile-goals/domain/bmi";
+} from "@/features/old-user-profile-goals/domain/bmi";
 
 describe("bmi domain helpers", () => {
   it("calculates BMI from weight and height", () => {

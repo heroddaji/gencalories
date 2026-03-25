@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { rankSuggestions } from "@/features/food-history-suggestions/domain/suggestionRanking";
+import { rankSuggestions } from "@/features/old-food-history-suggestions/domain/suggestionRanking";
 import type { FoodHistoryItem } from "@/shared/types/core";
 
 const baseNow = new Date("2026-03-01T10:00:00.000Z");
@@ -20,8 +20,14 @@ describe("rankSuggestions", () => {
     const results = rankSuggestions(
       "chick",
       [
-        item("chicken breast", { lastUsedAt: "2026-02-28T10:00:00.000Z", useCount: 4 }),
-        item("roast chicken", { lastUsedAt: "2025-11-01T10:00:00.000Z", useCount: 30 }),
+        item("chicken breast", {
+          lastUsedAt: "2026-02-28T10:00:00.000Z",
+          useCount: 4,
+        }),
+        item("roast chicken", {
+          lastUsedAt: "2025-11-01T10:00:00.000Z",
+          useCount: 30,
+        }),
       ],
       5,
     );
@@ -39,6 +45,9 @@ describe("rankSuggestions", () => {
       2,
     );
 
-    expect(results.map((entry) => entry.normalizedName)).toEqual(["apple", "banana"]);
+    expect(results.map((entry) => entry.normalizedName)).toEqual([
+      "apple",
+      "banana",
+    ]);
   });
 });
