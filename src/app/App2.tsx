@@ -19,8 +19,8 @@ FirebaseCapService.initializeFirebaseAnalytics();
 FirebaseCapService.signInAnonymously().then((signInResult) => {
   console.log("Signed in anonymously with signInResult:", signInResult);
 });
-FirebaseCapService.addDocument().then((addDocumentResult) => {
-  console.log("Added document to Firestore:", addDocumentResult);
+FirebaseCapService.addDocument().then(() => {
+  console.log("Added document to Firestore");
 });
 
 const appParameters = {

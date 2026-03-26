@@ -3,6 +3,11 @@ import { getAnalytics, isSupported } from "firebase/analytics";
 import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
 import { FirebaseCrashlytics } from "@capacitor-firebase/crashlytics";
 import { FirebaseFirestore } from "@capacitor-firebase/firestore";
+import {
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC5CDVJNEfL6jDIwwc7MSnp9jRbEigjp4g",
@@ -16,10 +21,19 @@ const firebaseConfig = {
 
 class FirebaseCapacitorService {
   private fbApp;
+  private db;
 
   constructor() {
     this.fbApp =
       getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+
+    // ensure Firestore is initialized with the same app instance and with IndexedDB persistence enabled
+    // todo: verify ios/android behavior
+    this.db = initializeFirestore(this.fbApp, {
+      localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager(),
+      }),
+    });
   }
 
   async initializeFirebaseAnalytics() {

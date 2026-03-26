@@ -15,7 +15,6 @@ dependencies {
     implementation project(':capacitor-firebase-authentication')
     implementation project(':capacitor-firebase-crashlytics')
     implementation project(':capacitor-firebase-firestore')
-    implementation project(':capawesome-capacitor-live-update')
 
 }
 

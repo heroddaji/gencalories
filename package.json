@@ -1,6 +1,6 @@
 {
   "name": "gencalories",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,16 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit",
-    "cap:add:android": "npx cap add android",
-    "cap:add:ios": "npx cap add ios",
-    "cap:sync": "npx cap sync",
-    "mobile:bundle": "npm run build && npm run cap:sync",
-    "mobile:open:android": "npx cap open android",
-    "mobile:open:ios": "npx cap open ios",
-    "mobile:live-update": "npx @capawesome/cli apps:liveupdates:upload",
-    "package:android": "npm run mobile:bundle && npx cap build android",
-    "package:ios": "npm run mobile:bundle && npx cap build ios"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@capacitor-community/sqlite": "^8.0.0",
@@ -28,7 +19,6 @@
     "@capacitor-firebase/crashlytics": "^8.1.0",
     "@capacitor-firebase/firestore": "^8.1.0",
     "@capacitor/core": "^8.1.0",
-    "@capawesome/capacitor-live-update": "^8.2.0",
     "@ionic/core": "^8.7.18",
     "@ionic/react": "^8.7.18",
     "firebase": "^12.11.0",

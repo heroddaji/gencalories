@@ -16,8 +16,7 @@ let package = Package(
         .package(name: "CapacitorFirebaseApp", path: "../../../node_modules/@capacitor-firebase/app"),
         .package(name: "CapacitorFirebaseAuthentication", path: "../../../node_modules/@capacitor-firebase/authentication"),
         .package(name: "CapacitorFirebaseCrashlytics", path: "../../../node_modules/@capacitor-firebase/crashlytics"),
-        .package(name: "CapacitorFirebaseFirestore", path: "../../../node_modules/@capacitor-firebase/firestore"),
-        .package(name: "CapawesomeCapacitorLiveUpdate", path: "../../../node_modules/@capawesome/capacitor-live-update")
+        .package(name: "CapacitorFirebaseFirestore", path: "../../../node_modules/@capacitor-firebase/firestore")
     ],
     targets: [
         .target(
@@ -29,8 +28,7 @@ let package = Package(
                 .product(name: "CapacitorFirebaseApp", package: "CapacitorFirebaseApp"),
                 .product(name: "CapacitorFirebaseAuthentication", package: "CapacitorFirebaseAuthentication"),
                 .product(name: "CapacitorFirebaseCrashlytics", package: "CapacitorFirebaseCrashlytics"),
-                .product(name: "CapacitorFirebaseFirestore", package: "CapacitorFirebaseFirestore"),
-                .product(name: "CapawesomeCapacitorLiveUpdate", package: "CapawesomeCapacitorLiveUpdate")
+                .product(name: "CapacitorFirebaseFirestore", package: "CapacitorFirebaseFirestore")
             ]
         )
     ]

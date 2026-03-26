@@ -1,5 +1,4 @@
 import { Capacitor } from "@capacitor/core";
-import { LiveUpdate } from "@capawesome/capacitor-live-update";
 import type {
   LiveUpdateCheckResult,
   LiveUpdateProvider,
@@ -27,6 +26,29 @@ interface LatestBundleMetadata {
   artifactType?: "manifest" | "zip";
 }
 
+interface LiveUpdateBundleResult {
+  bundleId?: string;
+  checksum?: string;
+  signature?: string;
+  downloadUrl?: string;
+  artifactType?: "manifest" | "zip";
+}
+
+interface LiveUpdatePlugin {
+  getCurrentBundle(): Promise<{ bundleId?: string }>;
+  fetchLatestBundle(): Promise<LiveUpdateBundleResult>;
+  downloadBundle(options: {
+    bundleId: string;
+    url: string;
+    artifactType?: "manifest" | "zip";
+    checksum?: string;
+    signature?: string;
+  }): Promise<void>;
+  setNextBundle(options: { bundleId: string }): Promise<void>;
+  reload(): Promise<void>;
+  reset(): Promise<void>;
+}
+
 const bundledState = (rollbackReason?: string): PersistedUpdateState => ({
   currentBundleVersion: versionInfo.bundleVersion,
   manifestHash: "native-bundled-hash",
@@ -37,6 +59,8 @@ const bundledState = (rollbackReason?: string): PersistedUpdateState => ({
 
 export class MobileLiveUpdateProvider implements LiveUpdateProvider {
   private latestBundle: LatestBundleMetadata | null = null;
+  private liveUpdatePluginPromise: Promise<LiveUpdatePlugin | null> | null =
+    null;
 
   constructor(private readonly storage: StorageProvider) {}
 
@@ -52,7 +76,12 @@ export class MobileLiveUpdateProvider implements LiveUpdateProvider {
 
     try {
       const parsed = JSON.parse(raw) as Partial<PersistedUpdateState>;
-      if (parsed.currentBundleVersion && parsed.manifestHash && parsed.manifestSignature && parsed.appliedAt) {
+      if (
+        parsed.currentBundleVersion &&
+        parsed.manifestHash &&
+        parsed.manifestSignature &&
+        parsed.appliedAt
+      ) {
         return {
           currentBundleVersion: parsed.currentBundleVersion,
           manifestHash: parsed.manifestHash,
@@ -73,14 +102,34 @@ export class MobileLiveUpdateProvider implements LiveUpdateProvider {
     await this.storage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
 
+  private async getLiveUpdatePlugin(): Promise<LiveUpdatePlugin | null> {
+    if (!this.isNative()) {
+      return null;
+    }
+
+    if (!this.liveUpdatePluginPromise) {
+      const moduleName = "@capawesome/capacitor-live-update";
+      this.liveUpdatePluginPromise = import(/* @vite-ignore */ moduleName)
+        .then((module) => {
+          const candidate = (module as { LiveUpdate?: LiveUpdatePlugin })
+            .LiveUpdate;
+          return candidate ?? null;
+        })
+        .catch(() => null);
+    }
+
+    return this.liveUpdatePluginPromise;
+  }
+
   async getState(): Promise<LiveUpdateState> {
     const persisted = await this.readPersistedState();
-    if (!this.isNative()) {
+    const liveUpdate = await this.getLiveUpdatePlugin();
+    if (!liveUpdate) {
       return persisted;
     }
 
     try {
-      const { bundleId } = await LiveUpdate.getCurrentBundle();
+      const { bundleId } = await liveUpdate.getCurrentBundle();
       return {
         ...persisted,
         currentBundleVersion: bundleId ?? versionInfo.bundleVersion,
@@ -91,14 +140,15 @@ export class MobileLiveUpdateProvider implements LiveUpdateProvider {
   }
 
   async checkForUpdate(): Promise<LiveUpdateCheckResult> {
-    if (!this.isNative()) {
+    const liveUpdate = await this.getLiveUpdatePlugin();
+    if (!liveUpdate) {
       return { hasUpdate: false };
     }
 
     const current = await this.getState();
 
     try {
-      const result = await LiveUpdate.fetchLatestBundle();
+      const result = await liveUpdate.fetchLatestBundle();
       if (!result.bundleId) {
         this.latestBundle = null;
         return { hasUpdate: false };
@@ -121,12 +171,19 @@ export class MobileLiveUpdateProvider implements LiveUpdateProvider {
     }
   }
 
-  private async readLatestBundle(version: string): Promise<LatestBundleMetadata> {
+  private async readLatestBundle(
+    version: string,
+  ): Promise<LatestBundleMetadata> {
     if (this.latestBundle?.version === version) {
       return this.latestBundle;
     }
 
-    const result = await LiveUpdate.fetchLatestBundle();
+    const liveUpdate = await this.getLiveUpdatePlugin();
+    if (!liveUpdate) {
+      throw new Error("Live update plugin is not available.");
+    }
+
+    const result = await liveUpdate.fetchLatestBundle();
     if (!result.bundleId || result.bundleId !== version) {
       throw new Error("No matching live update bundle found.");
     }
@@ -144,7 +201,8 @@ export class MobileLiveUpdateProvider implements LiveUpdateProvider {
   }
 
   async applyUpdate(nextBundleVersion: string): Promise<void> {
-    if (!this.isNative()) {
+    const liveUpdate = await this.getLiveUpdatePlugin();
+    if (!liveUpdate) {
       return;
     }
 
@@ -153,7 +211,7 @@ export class MobileLiveUpdateProvider implements LiveUpdateProvider {
       throw new Error("Live update bundle does not provide a download URL.");
     }
 
-    await LiveUpdate.downloadBundle({
+    await liveUpdate.downloadBundle({
       bundleId: nextBundle.version,
       url: nextBundle.downloadUrl,
       artifactType: nextBundle.artifactType,
@@ -161,7 +219,7 @@ export class MobileLiveUpdateProvider implements LiveUpdateProvider {
       signature: nextBundle.signature,
     });
 
-    await LiveUpdate.setNextBundle({ bundleId: nextBundle.version });
+    await liveUpdate.setNextBundle({ bundleId: nextBundle.version });
 
     await this.writeState({
       currentBundleVersion: nextBundle.version,
@@ -172,17 +230,18 @@ export class MobileLiveUpdateProvider implements LiveUpdateProvider {
       rollbackReason: undefined,
     });
 
-    await LiveUpdate.reload();
+    await liveUpdate.reload();
   }
 
   async rollback(reason: string): Promise<void> {
     const fallbackState = bundledState(reason);
 
     await this.writeState(fallbackState);
-    if (!this.isNative()) {
+    const liveUpdate = await this.getLiveUpdatePlugin();
+    if (!liveUpdate) {
       return;
     }
 
-    await LiveUpdate.reset();
+    await liveUpdate.reset();
   }
 }
