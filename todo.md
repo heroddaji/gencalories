@@ -1,8 +1,8 @@
 - installed firebase -> done
 - create firebase, firestore project -> done
   - web -> done
-  - ios -> wip
-  - android -> wip
+  - android -> done
+  - ios -> done
 - store simple food entry in ui
   - have an app state for food entry
   - when add, sync to firebase
