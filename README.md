@@ -1,108 +1,15 @@
-# GenCalories (Hybrid Ionic + Capacitor MVP)
-
-GenCalories is a modular calories-tracking app scaffold built with **Ionic React + Vite + Capacitor**.
-
-## Implemented MVP
-
-- Food entry with quantity + serving unit
-- Local nutrition resolution (calories, protein, carbs, fat)
-- Daily summary (total calories, macros, goal delta, insight message)
-- History-powered suggestions with ranking (prefix + fuzzy + recency + frequency)
-- History controls: delete single suggestion, clear all history
-- Local daily calorie goal setting
-- Live update provider scaffold with fallback/rollback state metadata
-
-## Architecture
-
-- `src/features/*` split by feature and layer (domain/application/infrastructure/presentation)
-- Plugin-first contracts in `src/app/di/contracts.ts`
-- Web composition root in `src/app/bootstrap/createWebAppContainer.ts`
-- Mobile builds now wire a `MobileStorageProvider` (`src/platform/mobile/MobileStorageProvider.ts`) that persists key/value data via the Capacitor SQLite plugin and is only activated when `Capacitor.isNativePlatform()` returns `true`.
-- `src/app/bootstrap/createMobileAppContainer.ts` mirrors the web container but injects the native storage provider while still sharing the same use cases and services, and `src/app/App.tsx` selects the appropriate container at runtime.
-
-## Mobile storage parity
-
-- The native bootstrap ensures food entries, history, user goals, profile data, and live update state persist through SQLite using the shared `StorageProvider` interface.
-- Validation for native behavior relies on Capacitor device builds, so continue running `npm run typecheck` and mobile bundling scripts (`npm run mobile:bundle`) within the targeted platforms to ensure the SQLite adapter initializes properly.
-
-## Run
-
-```bash
-npm install
-npm run dev
-```
-
-## Mobile (Android + iOS)
-
-Add native projects once:
-
-```bash
-npm run cap:add:android
-npm run cap:add:ios
-```
-
-Bundle current app code and sync native wrappers:
-
-```bash
-npm run mobile:bundle
-```
-
-Package builds:
-
-```bash
-npm run package:android
-npm run package:ios
-```
-
-Open native IDE projects:
-
-```bash
-npm run mobile:open:android
-npm run mobile:open:ios
-```
-
-## Validate
-
-```bash
-npm run typecheck
-npm test
-npm run build
-```
-
-## OTA Live Update (GitHub manifest)
-
-The app is always bundled with local `dist` assets, then checks GitHub for a newer bundle manifest at startup/resume.
-
-Configure in `.env`:
-
-```bash
-VITE_LIVE_UPDATE_MANIFEST_URL=https://raw.githubusercontent.com/<owner>/<repo>/<branch>/live-update/manifest.json
-```
-
-Expected manifest shape:
-
-```json
-{
-  "version": "2026.03.03.1",
-  "hash": "sha256-...",
-  "signature": "sig_2026.03.03.1",
-  "appUrl": "https://<owner>.github.io/<repo>/",
-  "assets": [
-    "/index.html",
-    "/assets/index-abc123.js",
-    "/assets/index-abc123.css"
-  ]
-}
-```
-
-Behavior:
-
-1. App starts from bundled code.
-2. If manifest version is newer, app prefetches `assets`, stores update metadata, and reloads to `appUrl`.
-3. If update fetch/apply fails, app keeps bundled baseline and can rollback state automatically.
-
-Release flow with GitHub:
-
-1. Build and publish web assets to GitHub Pages (`appUrl` target).
-2. Update [`live-update/manifest.json`](./live-update/manifest.json) with new `version`, `hash`, `signature`, and `assets`.
-3. Commit and push manifest to `main` so raw GitHub manifest URL changes.
+src/
+├── app/ # Global providers, app-wide styles, main router
+├── features/ # Domain-driven modules
+│ ├── auth/ # Login, Register, useAuth hook, authService
+│ ├── dashboard/ # Specific components, state, and logic
+│ └── settings/
+├── services/ # Platform-independent wrappers for Capacitor/APIs
+│ ├── native/ # Capacitor plugin abstractions (Camera, Storage)
+│ └── api/ # Axios/Fetch instances
+├── shared/ # Global reusable pieces
+│ ├── components/ # UI Kit (Buttons, Inputs)
+│ ├── hooks/ # useLocalStorage, useDebounce
+│ └── types/ # Global TypeScript interfaces
+├── theme/ # Mobile-specific styling (Safe Areas, variables)
+└── main.tsx # Entry point

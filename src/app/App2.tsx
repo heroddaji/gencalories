@@ -2,8 +2,6 @@ import Framework7 from "framework7/lite-bundle";
 import Framework7React, {
   App,
   Link,
-  Navbar,
-  Page,
   Toolbar,
   View,
   Views,
@@ -11,10 +9,19 @@ import Framework7React, {
 import { DashboardPage } from "@/features/dashboard/presentation/DashboardPage";
 import { DailySummaryPage } from "@/features/daily-summary/presentation/DailySummaryPage";
 import { ProfilePage } from "@/features/profile/presentation/ProfilePage";
-import { initializeFirebaseAnalytics } from "@/shared/firebase/app";
+import { FirebaseCapService } from "@/services/firebase/FirebaseCapacitorService";
 
+// init the app
 Framework7.use(Framework7React);
-void initializeFirebaseAnalytics();
+
+// init firebase services and sign in anonymously for analytics purposes
+FirebaseCapService.initializeFirebaseAnalytics();
+FirebaseCapService.signInAnonymously().then((signInResult) => {
+  console.log("Signed in anonymously with signInResult:", signInResult);
+});
+FirebaseCapService.addDocument().then((addDocumentResult) => {
+  console.log("Added document to Firestore:", addDocumentResult);
+});
 
 const appParameters = {
   name: "GenCalories",
