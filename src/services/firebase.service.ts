@@ -1,13 +1,14 @@
-import { getApp, getApps, initializeApp } from "firebase/app";
+import { FirebaseApp, getApp, getApps, initializeApp } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
-import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
 import { FirebaseCrashlytics } from "@capacitor-firebase/crashlytics";
 import { FirebaseFirestore } from "@capacitor-firebase/firestore";
 import {
+  Firestore,
   initializeFirestore,
   persistentLocalCache,
   persistentMultipleTabManager,
 } from "firebase/firestore";
+import { Capacitor } from "@capacitor/core";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC5CDVJNEfL6jDIwwc7MSnp9jRbEigjp4g",
@@ -20,23 +21,33 @@ const firebaseConfig = {
 };
 
 class FirebaseCapacitorService {
-  private fbApp;
-  private db;
+  private fbApp?: FirebaseApp;
+  private db?: Firestore;
+  private isWeb: boolean;
 
   constructor() {
-    this.fbApp =
-      getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+    this.isWeb = Capacitor.getPlatform() === "web";
 
-    // ensure Firestore is initialized with the same app instance and with IndexedDB persistence enabled
-    // todo: verify ios/android behavior
-    this.db = initializeFirestore(this.fbApp, {
-      localCache: persistentLocalCache({
-        tabManager: persistentMultipleTabManager(),
-      }),
-    });
+    if (this.isWeb) {
+      this.fbApp =
+        getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+
+      // ensure Firestore is initialized with the same app instance and with IndexedDB persistence enabled
+      this.db = initializeFirestore(this.fbApp, {
+        localCache: persistentLocalCache({
+          tabManager: persistentMultipleTabManager(),
+        }),
+      });
+
+      this.initializeFirebaseAnalyticsForWebPlatform();
+    }
   }
 
-  async initializeFirebaseAnalytics() {
+  initializeApp(): FirebaseApp | undefined {
+    return this.fbApp;
+  }
+
+  private async initializeFirebaseAnalyticsForWebPlatform() {
     if (typeof window === "undefined") {
       return;
     }
@@ -47,10 +58,6 @@ class FirebaseCapacitorService {
 
     getAnalytics(this.fbApp);
   }
-
-  signInAnonymously = async () => {
-    return await FirebaseAuthentication.signInAnonymously();
-  };
 
   crash = async () => {
     await FirebaseCrashlytics.crash({ message: "Test" });
@@ -68,4 +75,4 @@ class FirebaseCapacitorService {
   };
 }
 
-export const FirebaseCapService = new FirebaseCapacitorService();
+export const firebaseService = new FirebaseCapacitorService();

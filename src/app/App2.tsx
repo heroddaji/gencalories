@@ -9,18 +9,16 @@ import Framework7React, {
 import { DashboardPage } from "@/features/dashboard/presentation/DashboardPage";
 import { DailySummaryPage } from "@/features/daily-summary/presentation/DailySummaryPage";
 import { ProfilePage } from "@/features/profile/presentation/ProfilePage";
-import { FirebaseCapService } from "@/services/firebase/FirebaseCapacitorService";
+import { authService } from "@/services/auth.service";
+import { firebaseService } from "@/services/firebase.service";
 
 // init the app
 Framework7.use(Framework7React);
 
-// init firebase services and sign in anonymously for analytics purposes
-FirebaseCapService.initializeFirebaseAnalytics();
-FirebaseCapService.signInAnonymously().then((signInResult) => {
+// Sign in anonymously to Firebase for analytics purposes
+firebaseService.initializeApp;
+authService.signInAnonymously().then((signInResult) => {
   console.log("Signed in anonymously with signInResult:", signInResult);
-});
-FirebaseCapService.addDocument().then(() => {
-  console.log("Added document to Firestore");
 });
 
 const appParameters = {

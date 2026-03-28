@@ -3,6 +3,10 @@
   - web -> done
   - android -> done
   - ios -> done
+- signin
+  - web
+  - ios
+  - android
 - store simple food entry in ui
   - have an app state for food entry
   - when add, sync to firebase

@@ -25,7 +25,7 @@ export const DashboardPage = () => {
       <Card title="Breakfast" raised>
         <CardContent>
           <List mediaList inset strongIos dividersIos>
-            <ListItem title="Oatmeal 200g">
+            <ListItem title="Oatmeal 300g">
               <img
                 slot="media"
                 src="https://cdn.framework7.io/placeholder/fashion-88x88-4.jpg"
